@@ -495,29 +495,6 @@
 </section>
 
 <script>
-/* =====================================================================
-   1) PRODUCT DATABASE
-   ---------------------------------------------------------------------
-   Everything the shop sells lives here. To add a new product, find its
-   category below and push a new object into that category's `items`
-   array — nothing else in the file needs to change.
-
-   Product object shape (fields marked * are required):
-     name*      : string   — display name
-     tag*       : string   — short subtitle shown under the name
-     price*     : number   — price in USD (0 = "no extra cost")
-     specs*     : object   — key/value pairs shown as the spec list
-     power      : number   — estimated watts drawn (omit if not relevant)
-     socket     : string   — CPU/board socket, used for compatibility checks
-     ram        : string   — memory type (DDR4/DDR5), informational
-     wattage    : number   — PSU rated wattage, used for the power warning
-     featured   : boolean  — shows a "Recommended" ribbon
-
-   To add a whole new CATEGORY, copy one of the blocks in CATEGORY_DEFS
-   and give it a unique id, an icon (see ICONS below), and its own
-   items array.
-   =================================================================== */
-
 const ICONS = {
   cpu: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="6" y="6" width="12" height="12" rx="1"/><rect x="9" y="9" width="6" height="6" rx="0.5"/><path d="M9 2v3M12 2v3M15 2v3M9 19v3M12 19v3M15 19v3M2 9h3M2 12h3M2 15h3M19 9h3M19 12h3M19 15h3"/></svg>`,
   board: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="1"/><rect x="6" y="6" width="5" height="5"/><path d="M14 6h4M14 9h4M6 14h3v4H6zM13 13h5v5h-5z"/></svg>`,
@@ -529,7 +506,6 @@ const ICONS = {
   cooler: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="8"/><path d="M12 4c1.5 2 1.5 4 0 4s-1.5-2 0-4M12 20c1.5-2 1.5-4 0-4s-1.5 2 0 4M4 12c2-1.5 4-1.5 4 0s-2 1.5-4 0M20 12c-2-1.5-4-1.5-4 0s2 1.5 4 0"/><circle cx="12" cy="12" r="1.4" fill="currentColor"/></svg>`,
 };
 
-/* signature background hues per category, used behind the card icon */
 const HUES = {
   cpu:    ['rgba(208,138,76,.35)','rgba(123,171,130,.10)'],
   board:  ['rgba(96,140,196,.30)','rgba(208,138,76,.10)'],
@@ -545,102 +521,115 @@ const CATEGORY_DEFS = [
   { id:'cpu', name:'CPU', en:'Processor', icon:'cpu',
     note:'The brain of the machine. Pick this first — it decides which motherboard socket you need.',
     items:[
-      { name:'AMD Ryzen 5 7500F', tag:'AM5 · 6C/12T', price:129, power:65, specs:{'Socket':'AM5','Cores/Threads':'6/12','Boost':'5.0GHz'}, socket:'AM5', tier:2 },
-      { name:'AMD Ryzen 5 9600X', tag:'AM5 · 6C/12T', price:209, power:65, specs:{'Socket':'AM5','Cores/Threads':'6/12','Boost':'5.4GHz'}, socket:'AM5', tier:3, featured:true },
+      { name:'AMD Ryzen 5 7600', tag:'AM5 · 6C/12T', price:199, power:65, specs:{'Socket':'AM5','Cores/Threads':'6/12','Boost':'5.1GHz'}, socket:'AM5', tier:2 },
+      { name:'AMD Ryzen 5 7600X', tag:'AM5 · 6C/12T', price:219, power:105, specs:{'Socket':'AM5','Cores/Threads':'6/12','Boost':'5.3GHz'}, socket:'AM5', tier:3 },
+      { name:'AMD Ryzen 5 9600X', tag:'AM5 · 6C/12T', price:279, power:65, specs:{'Socket':'AM5','Cores/Threads':'6/12','Boost':'5.4GHz'}, socket:'AM5', tier:3, featured:true },
+      { name:'AMD Ryzen 7 7800X3D', tag:'AM5 · 8C/16T', price:399, power:120, specs:{'Socket':'AM5','Cores/Threads':'8/16','3D Cache':'Yes'}, socket:'AM5', tier:4, featured:true },
       { name:'AMD Ryzen 7 9800X3D', tag:'AM5 · 8C/16T', price:479, power:120, specs:{'Socket':'AM5','Cores/Threads':'8/16','3D Cache':'Yes'}, socket:'AM5', tier:5 },
-      { name:'Intel Core i5-14400F', tag:'LGA1700 · 10C/16T', price:165, power:65, specs:{'Socket':'LGA1700','Cores/Threads':'10/16','Boost':'4.7GHz'}, socket:'LGA1700', tier:2 },
+      { name:'AMD Ryzen 9 7950X3D', tag:'AM5 · 16C/32T', price:599, power:120, specs:{'Socket':'AM5','Cores/Threads':'16/32','Boost':'5.7GHz'}, socket:'AM5', tier:6 },
+      { name:'Intel Core i3-14100F', tag:'LGA1700 · 4C/8T', price:109, power:58, specs:{'Socket':'LGA1700','Cores/Threads':'4/8','Boost':'4.7GHz'}, socket:'LGA1700', tier:1 },
+      { name:'Intel Core i5-14400F', tag:'LGA1700 · 10C/16T', price:199, power:65, specs:{'Socket':'LGA1700','Cores/Threads':'10/16','Boost':'4.7GHz'}, socket:'LGA1700', tier:2 },
       { name:'Intel Core i5-14600KF', tag:'LGA1700 · 14C/20T', price:269, power:125, specs:{'Socket':'LGA1700','Cores/Threads':'14/20','Boost':'5.3GHz'}, socket:'LGA1700', tier:3 },
-      { name:'Intel Core i7-14700KF', tag:'LGA1700 · 20C/28T', price:375, power:125, specs:{'Socket':'LGA1700','Cores/Threads':'20/28','Boost':'5.6GHz'}, socket:'LGA1700', tier:4 },
-      /* --- add more CPUs here, same shape as above --- */
+      { name:'Intel Core i7-14700K', tag:'LGA1700 · 20C/28T', price:399, power:125, specs:{'Socket':'LGA1700','Cores/Threads':'20/28','Boost':'5.6GHz'}, socket:'LGA1700', tier:4 },
+      { name:'Intel Core i9-14900KS', tag:'LGA1700 · 24C/32T', price:689, power:150, specs:{'Socket':'LGA1700','Cores/Threads':'24/32','Boost':'6.2GHz'}, socket:'LGA1700', tier:6 }
     ]},
   { id:'board', name:'Motherboard', en:'Motherboard', icon:'board',
     note:'Must match the socket of the CPU you selected.',
     items:[
       { name:'ASRock B650M-HDV/M.2', tag:'AM5 · mATX', price:99, specs:{'Socket':'AM5','Memory':'DDR5','Form factor':'mATX'}, socket:'AM5' },
+      { name:'MSI PRO B650-P WIFI', tag:'AM5 · ATX', price:139, specs:{'Socket':'AM5','Memory':'DDR5','Wi-Fi':'Yes'}, socket:'AM5' },
       { name:'Gigabyte B650 AORUS Elite AX', tag:'AM5 · ATX', price:189, specs:{'Socket':'AM5','Memory':'DDR5','Wi-Fi':'Yes'}, socket:'AM5', featured:true },
-      { name:'ASUS ROG STRIX X670E-A', tag:'AM5 · ATX', price:399, specs:{'Socket':'AM5','Memory':'DDR5','PCIe':'5.0'}, socket:'AM5' },
-      { name:'MSI PRO B760M-A', tag:'LGA1700 · mATX', price:109, specs:{'Socket':'LGA1700','Memory':'DDR4','Form factor':'mATX'}, socket:'LGA1700' },
-      { name:'ASUS TUF Gaming B760-Plus WiFi', tag:'LGA1700 · ATX', price:175, specs:{'Socket':'LGA1700','Memory':'DDR5','Wi-Fi':'Yes'}, socket:'LGA1700' },
-      /* --- add more motherboards here --- */
+      { name:'ASUS ROG STRIX B650E-F', tag:'AM5 · ATX', price:269, specs:{'Socket':'AM5','Memory':'DDR5','PCIe':'5.0'}, socket:'AM5' },
+      { name:'ASUS ROG CROSSHAIR X670E HERO', tag:'AM5 · ATX', price:649, specs:{'Socket':'AM5','Memory':'DDR5','Premium':'Yes'}, socket:'AM5' },
+      { name:'ASRock H610M-HVS', tag:'LGA1700 · mATX', price:79, specs:{'Socket':'LGA1700','Memory':'DDR4','Form factor':'mATX'}, socket:'LGA1700' },
+      { name:'MSI PRO B760M-A WIFI DDR4', tag:'LGA1700 · mATX', price:129, specs:{'Socket':'LGA1700','Memory':'DDR4','Wi-Fi':'Yes'}, socket:'LGA1700' },
+      { name:'Gigabyte B760 AORUS ELITE AX', tag:'LGA1700 · ATX', price:169, specs:{'Socket':'LGA1700','Memory':'DDR5','Wi-Fi':'Yes'}, socket:'LGA1700', featured:true },
+      { name:'MSI MAG Z790 TOMAHAWK WIFI', tag:'LGA1700 · ATX', price:239, specs:{'Socket':'LGA1700','Memory':'DDR5','Overclocking':'Yes'}, socket:'LGA1700' },
+      { name:'ASUS ROG MAXIMUS Z790 DARK HERO', tag:'LGA1700 · ATX', price:699, specs:{'Socket':'LGA1700','Memory':'DDR5','Premium':'Yes'}, socket:'LGA1700' }
     ]},
   { id:'ram', name:'Memory', en:'Memory', icon:'ram',
     note:'Dual-channel (2 sticks or more) is recommended for best performance.',
     items:[
-      { name:'Kingston FURY Beast 16GB (8x2)', tag:'DDR4 · 3200MHz', price:38, specs:{'Type':'DDR4','Capacity':'16GB','Speed':'3200MHz'}, ram:'DDR4' },
-      { name:'Corsair Vengeance 32GB (16x2)', tag:'DDR4 · 3600MHz', price:79, specs:{'Type':'DDR4','Capacity':'32GB','Speed':'3600MHz'}, ram:'DDR4' },
-      { name:'G.Skill Trident Z5 32GB (16x2)', tag:'DDR5 · 6000MHz', price:115, specs:{'Type':'DDR5','Capacity':'32GB','Speed':'6000MHz'}, ram:'DDR5', featured:true },
-      { name:'Corsair Dominator 64GB (32x2)', tag:'DDR5 · 6400MHz', price:259, specs:{'Type':'DDR5','Capacity':'64GB','Speed':'6400MHz'}, ram:'DDR5' },
-      /* --- add more memory kits here --- */
+      { name:'Crucial 16GB (8x2)', tag:'DDR4 · 3200MHz', price:32, specs:{'Type':'DDR4','Capacity':'16GB','Speed':'3200MHz'}, ram:'DDR4' },
+      { name:'Corsair Vengeance LPX 32GB (16x2)', tag:'DDR4 · 3600MHz', price:75, specs:{'Type':'DDR4','Capacity':'32GB','Speed':'3600MHz'}, ram:'DDR4' },
+      { name:'Crucial Pro 32GB (16x2)', tag:'DDR5 · 5600MHz', price:85, specs:{'Type':'DDR5','Capacity':'32GB','Speed':'5600MHz'}, ram:'DDR5' },
+      { name:'G.Skill Flare X5 32GB (16x2)', tag:'DDR5 · 6000MHz CL30', price:105, specs:{'Type':'DDR5','Capacity':'32GB','Speed':'6000MHz'}, ram:'DDR5', featured:true },
+      { name:'Corsair Vengeance RGB 32GB (16x2)', tag:'DDR5 · 6000MHz', price:119, specs:{'Type':'DDR5','Capacity':'32GB','RGB':'Yes'}, ram:'DDR5' },
+      { name:'G.Skill Trident Z5 RGB 64GB (32x2)', tag:'DDR5 · 6400MHz', price:215, specs:{'Type':'DDR5','Capacity':'64GB','Speed':'6400MHz'}, ram:'DDR5' },
+      { name:'Corsair Dominator Titanium 64GB', tag:'DDR5 · 7200MHz', price:339, specs:{'Type':'DDR5','Capacity':'64GB','Premium':'Yes'}, ram:'DDR5' },
+      { name:'G.Skill Trident Z5 96GB (48x2)', tag:'DDR5 · 6800MHz', price:399, specs:{'Type':'DDR5','Capacity':'96GB','Workstation':'Yes'}, ram:'DDR5' }
     ]},
   { id:'gpu', name:'Graphics Card', en:'GPU', icon:'gpu',
     note:'The biggest factor in gaming frame rate. Pick based on the resolution you play at.',
     items:[
-      { name:'RTX 4060 8GB', tag:'Smooth 1080p', price:289, power:115, specs:{'VRAM':'8GB','Best for':'1080p'} },
+      { name:'Radeon RX 6600 8GB', tag:'Budget 1080p', price:199, power:132, specs:{'VRAM':'8GB','Best for':'1080p'} },
+      { name:'Radeon RX 7600 8GB', tag:'Modern 1080p', price:259, power:165, specs:{'VRAM':'8GB','Best for':'1080p'} },
+      { name:'RTX 4060 8GB', tag:'Smooth 1080p', price:289, power:115, specs:{'VRAM':'8GB','Features':'DLSS 3'} },
+      { name:'Radeon RX 7700 XT 12GB', tag:'High FPS 1080p', price:419, power:245, specs:{'VRAM':'12GB','Best for':'1080p–1440p'} },
       { name:'RTX 4060 Ti 8GB', tag:'1080p–1440p', price:399, power:160, specs:{'VRAM':'8GB','Best for':'1080–1440p'}, featured:true },
-      { name:'RTX 4070 SUPER 12GB', tag:'Comfortable 1440p', price:659, power:220, specs:{'VRAM':'12GB','Best for':'1440p'} },
-      { name:'RTX 4070 Ti SUPER 16GB', tag:'1440p–4K', price:949, power:285, specs:{'VRAM':'16GB','Best for':'1440–4K'} },
-      { name:'Radeon RX 7600 8GB', tag:'Budget 1080p', price:249, power:165, specs:{'VRAM':'8GB','Best for':'1080p'} },
-      /* --- add more graphics cards here --- */
+      { name:'Radeon RX 7800 XT 16GB', tag:'Great 1440p', price:499, power:263, specs:{'VRAM':'16GB','Best for':'1440p'} },
+      { name:'RTX 4070 SUPER 12GB', tag:'Comfortable 1440p', price:599, power:220, specs:{'VRAM':'12GB','Best for':'1440p'} },
+      { name:'Radeon RX 7900 XT 20GB', tag:'1440p–4K', price:739, power:315, specs:{'VRAM':'20GB','Best for':'4K Gaming'} },
+      { name:'RTX 4070 Ti SUPER 16GB', tag:'1440p–4K', price:799, power:285, specs:{'VRAM':'16GB','Best for':'1440–4K'}, featured:true },
+      { name:'Radeon RX 7900 XTX 24GB', tag:'High-End 4K', price:949, power:355, specs:{'VRAM':'24GB','Best for':'4K Gaming'} },
+      { name:'RTX 4080 SUPER 16GB', tag:'Premium 4K', price:999, power:320, specs:{'VRAM':'16GB','Best for':'4K Gaming'} },
+      { name:'RTX 4090 24GB', tag:'Uncompromised 4K', price:1799, power:450, specs:{'VRAM':'24GB','Best for':'8K / AI workloads'} }
     ]},
   { id:'storage', name:'Storage', en:'Storage', icon:'storage',
     note:'You can pick more than one — e.g. a fast SSD for boot plus an HDD for bulk storage.',
     multi:true,
     items:[
-      { name:'500GB NVMe SSD (Gen3)', tag:'~3,500MB/s read', price:32, specs:{'Capacity':'500GB','Interface':'NVMe Gen3'} },
-      { name:'1TB NVMe SSD (Gen4)', tag:'~7,000MB/s read', price:69, specs:{'Capacity':'1TB','Interface':'NVMe Gen4'}, featured:true },
-      { name:'2TB NVMe SSD (Gen4)', tag:'~7,000MB/s read', price:132, specs:{'Capacity':'2TB','Interface':'NVMe Gen4'} },
-      { name:'2TB HDD 7200RPM', tag:'For bulk file storage', price:49, specs:{'Capacity':'2TB','Spin speed':'7200RPM'} },
-      /* --- add more storage options here --- */
+      { name:'Kingston A400 480GB SATA', tag:'Budget Boot Drive', price:29, specs:{'Capacity':'480GB','Interface':'SATA SSD'} },
+      { name:'Crucial P3 500GB NVMe', tag:'~3,500MB/s read', price:39, specs:{'Capacity':'500GB','Interface':'NVMe Gen3'} },
+      { name:'WD Blue SN580 1TB NVMe', tag:'~4,150MB/s read', price:64, specs:{'Capacity':'1TB','Interface':'NVMe Gen4'} },
+      { name:'Samsung 990 EVO 1TB', tag:'~5,000MB/s read', price:85, specs:{'Capacity':'1TB','Interface':'NVMe Gen4/5'} },
+      { name:'WD Black SN850X 2TB', tag:'~7,300MB/s read', price:149, specs:{'Capacity':'2TB','Interface':'NVMe Gen4'}, featured:true },
+      { name:'Samsung 990 PRO 2TB', tag:'~7,450MB/s read', price:169, specs:{'Capacity':'2TB','Interface':'NVMe Gen4'} },
+      { name:'Crucial T700 2TB NVMe Gen5', tag:'~12,400MB/s read', price:279, specs:{'Capacity':'2TB','Interface':'NVMe Gen5'} },
+      { name:'Samsung 990 PRO 4TB', tag:'~7,450MB/s read', price:319, specs:{'Capacity':'4TB','Interface':'NVMe Gen4'} },
+      { name:'Seagate Barracuda 2TB HDD', tag:'Bulk storage', price:55, specs:{'Capacity':'2TB','Spin speed':'7200RPM'} },
+      { name:'Toshiba X300 8TB HDD', tag:'Massive bulk storage', price:145, specs:{'Capacity':'8TB','Spin speed':'7200RPM'} }
     ]},
   { id:'psu', name:'Power Supply', en:'PSU', icon:'psu',
     note:'Leave at least 20% headroom above your estimated total power draw.',
     items:[
-      { name:'550W 80+ Bronze', tag:'Non-modular', price:40, wattage:550, specs:{'Wattage':'550W','Rating':'80+ Bronze'} },
-      { name:'650W 80+ Bronze', tag:'Semi-modular', price:55, wattage:650, specs:{'Wattage':'650W','Rating':'80+ Bronze'}, featured:true },
-      { name:'750W 80+ Gold', tag:'Fully modular', price:86, wattage:750, specs:{'Wattage':'750W','Rating':'80+ Gold'} },
-      { name:'850W 80+ Gold', tag:'For high-end GPUs', price:106, wattage:850, specs:{'Wattage':'850W','Rating':'80+ Gold'} },
-      /* --- add more power supplies here --- */
+      { name:'Thermaltake Smart 500W', tag:'80+ White', price:39, wattage:500, specs:{'Wattage':'500W','Rating':'80+'} },
+      { name:'EVGA 600 BA 600W', tag:'80+ Bronze', price:54, wattage:600, specs:{'Wattage':'600W','Rating':'80+ Bronze'} },
+      { name:'Corsair CX650M 650W', tag:'Semi-modular', price:69, wattage:650, specs:{'Wattage':'650W','Rating':'80+ Bronze'}, featured:true },
+      { name:'Seasonic Focus GX-750 750W', tag:'Fully modular', price:95, wattage:750, specs:{'Wattage':'750W','Rating':'80+ Gold'} },
+      { name:'Corsair RM850e 850W', tag:'ATX 3.0 Compatible', price:119, wattage:850, specs:{'Wattage':'850W','Rating':'80+ Gold'}, featured:true },
+      { name:'MSI MPG A1000G 1000W', tag:'ATX 3.0 / PCIe 5.0', price:169, wattage:1000, specs:{'Wattage':'1000W','Rating':'80+ Gold'} },
+      { name:'Corsair RM1200x Shift', tag:'Side Interface', price:219, wattage:1200, specs:{'Wattage':'1200W','Rating':'80+ Gold'} },
+      { name:'Seasonic Prime TX-1300', tag:'Extreme Power', price:359, wattage:1300, specs:{'Wattage':'1300W','Rating':'80+ Titanium'} }
     ]},
   { id:'case', name:'Case', en:'Case', icon:'case',
     note:'Pick based on your motherboard size and the style you like.',
     items:[
-      { name:'NZXT H5 Flow', tag:'mATX/ATX · Great airflow', price:79, specs:{'Supports':'ATX/mATX','Front':'Mesh panel'} },
-      { name:'Lian Li LANCOOL 216', tag:'ATX · Excellent airflow', price:100, specs:{'Supports':'ATX/mATX','Fans':'3 included'}, featured:true },
-      { name:'Cooler Master MasterBox Q300L', tag:'mATX · Compact', price:46, specs:{'Supports':'mATX/ITX','Size':'Compact'} },
-      { name:'Fractal Design North', tag:'ATX · Wood front panel', price:135, specs:{'Supports':'ATX/mATX','Material':'Wood accent panel'} },
-      /* --- add more cases here --- */
+      { name:'Cooler Master Q300L', tag:'mATX · Compact', price:45, specs:{'Supports':'mATX/ITX','Size':'Compact'} },
+      { name:'Montech AIR 903 BASE', tag:'E-ATX · High Airflow', price:65, specs:{'Supports':'E-ATX/ATX','Fans':'3 included'} },
+      { name:'Corsair 4000D Airflow', tag:'ATX · Classic', price:94, specs:{'Supports':'E-ATX/ATX','Front':'Mesh'} },
+      { name:'NZXT H6 Flow', tag:'ATX · Dual Chamber', price:109, specs:{'Supports':'ATX/mATX','Design':'Glass corner'} },
+      { name:'Lian Li LANCOOL 216', tag:'ATX · Excellent airflow', price:100, specs:{'Supports':'E-ATX/ATX','Fans':'3 large fans'}, featured:true },
+      { name:'Fractal Design North', tag:'ATX · Wood front panel', price:139, specs:{'Supports':'ATX/mATX','Material':'Wood accent'} },
+      { name:'Hyte Y60', tag:'ATX · Panoramic Glass', price:179, specs:{'Supports':'E-ATX/ATX','Design':'Fish tank'} },
+      { name:'Lian Li O11 Dynamic EVO', tag:'ATX · Showcase', price:159, specs:{'Supports':'E-ATX/ATX','Modularity':'Reversible'} },
+      { name:'Fractal Design Torrent', tag:'E-ATX · Ultimate Airflow', price:189, specs:{'Supports':'E-ATX/ATX','Fans':'2x180mm included'} }
     ]},
   { id:'cooler', name:'CPU Cooler', en:'CPU Cooler', icon:'cooler',
     note:'High-end CPUs (X3D, K-series) benefit from a liquid cooler for lower temperatures.',
     items:[
       { name:'Stock Cooler', tag:'Included with CPU', price:0, specs:{'Type':'Air','Noise':'Moderate'} },
-      { name:'4-Heatpipe Tower Cooler', tag:'High airflow', price:28, specs:{'Type':'Air','Heatpipes':'4'}, featured:true },
-      { name:'240mm AIO Liquid Cooler', tag:'Cooler and quieter', price:65, specs:{'Type':'Liquid','Radiator':'240mm'} },
-      { name:'360mm AIO Liquid Cooler', tag:'For high-end CPUs', price:94, specs:{'Type':'Liquid','Radiator':'360mm'} },
-      /* --- add more coolers here --- */
-    ]},
-  /* --- add a whole new category by copying a block above and giving it a new id --- */
+      { name:'Thermalright Peerless Assassin 120', tag:'Dual Tower', price:34, specs:{'Type':'Air','Heatpipes':'6'}, featured:true },
+      { name:'DeepCool AK620', tag:'High Performance Air', price:55, specs:{'Type':'Air','TDP':'260W'} },
+      { name:'Noctua NH-D15', tag:'Premium Air Cooler', price:119, specs:{'Type':'Air','Noise':'Ultra Quiet'} },
+      { name:'Arctic Liquid Freezer III 240', tag:'Quiet 240mm AIO', price:86, specs:{'Type':'Liquid','Radiator':'240mm'} },
+      { name:'NZXT Kraken 240', tag:'LCD Screen AIO', price:135, specs:{'Type':'Liquid','Radiator':'240mm'} },
+      { name:'Arctic Liquid Freezer III 360', tag:'Performance 360mm', price:115, specs:{'Type':'Liquid','Radiator':'360mm'}, featured:true },
+      { name:'Corsair iCUE H150i ELITE', tag:'RGB 360mm AIO', price:179, specs:{'Type':'Liquid','Radiator':'360mm'} },
+      { name:'Lian Li Galahad II LCD 360', tag:'Premium 360mm AIO', price:249, specs:{'Type':'Liquid','Radiator':'360mm'} }
+    ]}
 ];
 
-/* =====================================================================
-   2) BACKEND LAYER (mock API)
-   ---------------------------------------------------------------------
-   Every call the UI makes to "the server" goes through this object.
-   Right now it's simulated with the browser's localStorage (private to
-   this device/browser) so the app works with no real server attached.
-   To wire up a real backend later, keep the same method names and
-   signatures and swap the internals for real `fetch()` calls, e.g.:
-
-     async createOrder(order){
-       const res = await fetch('/api/orders', {
-         method:'POST', headers:{'Content-Type':'application/json'},
-         body: JSON.stringify(order)
-       });
-       return res.json();
-     }
-
-   Nothing else in the app needs to change when you do that.
-   =================================================================== */
 const DB_KEYS = { cart:'pcbuilder_cart_v1', orders:'pcbuilder_orders_v1' };
 
 function safeGet(key, fallback){
@@ -654,24 +643,20 @@ function safeSet(key, value){
 function delay(ms){ return new Promise(r => setTimeout(r, ms)); }
 
 const API = {
-  /* GET /api/products */
   async getProducts(){
     await delay(80);
     return CATEGORY_DEFS;
   },
-  /* GET /api/cart */
   async getCart(){
     await delay(60);
     return safeGet(DB_KEYS.cart, null);
   },
-  /* PUT /api/cart */
   async saveCart(cartState){
     await delay(60);
     return safeSet(DB_KEYS.cart, cartState);
   },
-  /* POST /api/orders */
   async createOrder(order){
-    await delay(900); // simulates network + payment processing time
+    await delay(900);
     const orders = safeGet(DB_KEYS.orders, []);
     const orderId = 'PC-' + Date.now().toString(36).toUpperCase();
     const record = { ...order, orderId, createdAt: new Date().toISOString(), status:'confirmed' };
@@ -679,16 +664,12 @@ const API = {
     safeSet(DB_KEYS.orders, orders);
     return record;
   },
-  /* GET /api/orders */
   async getOrders(){
     await delay(60);
     return safeGet(DB_KEYS.orders, []);
   },
 };
 
-/* =====================================================================
-   3) APP STATE
-   =================================================================== */
 const state = {};
 CATEGORY_DEFS.forEach(c => state[c.id] = c.multi ? [] : null);
 let activeCat = CATEGORY_DEFS[0].id;
@@ -713,11 +694,6 @@ function totalPower(){ return selectedItemsFlat().reduce((s,x) => s + (x.item.po
 function chosenPsuWattage(){ const c = getCat('psu'); return state.psu !== null ? c.items[state.psu].wattage : null; }
 function essentialDone(){ return ['cpu','board','ram','psu','case'].every(id => state[id] !== null); }
 
-/* =====================================================================
-   4) ROUTER — swaps which <section class="page"> is visible and keeps
-   the top nav / cart badge in sync. Pages: build, cart, checkout,
-   confirm, history.
-   =================================================================== */
 function navigate(page){
   currentPage = page;
   document.querySelectorAll('.page').forEach(el => el.classList.toggle('active', el.id === 'page-' + page));
@@ -731,9 +707,6 @@ document.querySelectorAll('[data-nav]').forEach(el => {
   el.addEventListener('click', () => navigate(el.dataset.nav));
 });
 
-/* =====================================================================
-   5) BUILD PAGE rendering (parts picker)
-   =================================================================== */
 const stepsEl = document.getElementById('steps');
 const gridEl = document.getElementById('grid');
 const catTitleEl = document.getElementById('catTitle');
@@ -899,12 +872,8 @@ document.getElementById('resetBtn').addEventListener('click', () => {
 document.getElementById('goCartBtn').addEventListener('click', () => navigate('cart'));
 document.getElementById('mobCheckout').addEventListener('click', () => navigate('cart'));
 
-/* persist the build selection through the mock backend/localStorage */
 function persistCart(){ API.saveCart(state); }
 
-/* =====================================================================
-   6) CART PAGE
-   =================================================================== */
 function renderCartPage(){
   const flat = selectedItemsFlat();
   const listEl = document.getElementById('cartList');
@@ -963,9 +932,6 @@ function renderCartPage(){
   if (toCheckout) toCheckout.addEventListener('click', () => navigate('checkout'));
 }
 
-/* =====================================================================
-   7) CHECKOUT / PAYMENT PAGE
-   =================================================================== */
 function renderCheckoutPage(){
   const flat = selectedItemsFlat();
   const total = totalPrice();
@@ -1040,7 +1006,6 @@ checkoutForm.addEventListener('submit', async (e) => {
       ${record.items.map(it => `<div class="pay-summary row" style="border:none; padding:4px 0;"><span>${it.category}: ${it.name}</span><span>${it.price===0?'—':fmt(it.price)}</span></div>`).join('')}
       <div class="row grand" style="display:flex; justify-content:space-between; margin-top:10px; padding-top:10px; border-top:1px solid var(--line-soft);"><span>Amount charged</span><span class="v mono" style="color:var(--copper-bright);">${fmt(record.total)}</span></div>
     `;
-    // clear the build once the order is placed
     CATEGORY_DEFS.forEach(c => state[c.id] = c.multi ? [] : null);
     lastTotal = 0;
     persistCart();
@@ -1054,11 +1019,6 @@ checkoutForm.addEventListener('submit', async (e) => {
   }
 });
 
-/* =====================================================================
-   8) ORDER HISTORY PAGE — proves orders really persist via the mock
-   backend (localStorage today, a real database once API.createOrder /
-   API.getOrders are pointed at a server).
-   =================================================================== */
 async function renderHistoryPage(){
   const listEl = document.getElementById('historyList');
   listEl.innerHTML = `<div class="cart-empty">Loading...</div>`;
@@ -1077,9 +1037,6 @@ async function renderHistoryPage(){
     </div>`).join('');
 }
 
-/* =====================================================================
-   9) BOOT — load any saved cart from the mock backend, then render
-   =================================================================== */
 (async function init(){
   const saved = await API.getCart();
   if (saved){
