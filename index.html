@@ -209,6 +209,15 @@
   .card.selected .card-image .icon-wrap{color:#fff; background:rgba(208,138,76,.18); border-color:rgba(208,138,76,.4);}
   .icon-wrap svg{width:32px;height:32px;}
 
+  .card-image .prod-img{
+    position:relative; z-index:1;
+    width:100%; height:100%;
+    object-fit:contain;
+    padding:14px;
+    transition:transform .35s var(--ease);
+  }
+  .card:hover .card-image .prod-img{transform:scale(1.05);}
+
   .badge{
     position:absolute; top:10px; right:10px; z-index:2;
     font-size:9.5px; padding:3px 7px; border-radius:20px;
@@ -285,8 +294,10 @@
   .cart-row .ic{
     width:48px; height:48px; border-radius:var(--radius-m); background:var(--panel-alt); border:1px solid var(--line-soft);
     display:flex; align-items:center; justify-content:center; color:var(--copper-bright); flex:none;
+    overflow:hidden;
   }
   .cart-row .ic svg{width:24px;height:24px;}
+  .cart-row .ic img{width:100%;height:100%;object-fit:cover;}
   .cart-row .info{flex:1; min-width:0;}
   .cart-row .cat{font-size:10.5px; color:var(--text-faint); text-transform:uppercase; letter-spacing:0.04em;}
   .cart-row .nm{font-size:14.5px; font-weight:500; margin-top:2px;}
@@ -521,112 +532,112 @@ const CATEGORY_DEFS = [
   { id:'cpu', name:'CPU', en:'Processor', icon:'cpu',
     note:'The brain of the machine. Pick this first — it decides which motherboard socket you need.',
     items:[
-      { name:'AMD Ryzen 5 7600', tag:'AM5 · 6C/12T', price:199, power:65, specs:{'Socket':'AM5','Cores/Threads':'6/12','Boost':'5.1GHz'}, socket:'AM5', tier:2 },
-      { name:'AMD Ryzen 5 7600X', tag:'AM5 · 6C/12T', price:219, power:105, specs:{'Socket':'AM5','Cores/Threads':'6/12','Boost':'5.3GHz'}, socket:'AM5', tier:3 },
-      { name:'AMD Ryzen 5 9600X', tag:'AM5 · 6C/12T', price:279, power:65, specs:{'Socket':'AM5','Cores/Threads':'6/12','Boost':'5.4GHz'}, socket:'AM5', tier:3, featured:true },
-      { name:'AMD Ryzen 7 7800X3D', tag:'AM5 · 8C/16T', price:399, power:120, specs:{'Socket':'AM5','Cores/Threads':'8/16','3D Cache':'Yes'}, socket:'AM5', tier:4, featured:true },
-      { name:'AMD Ryzen 7 9800X3D', tag:'AM5 · 8C/16T', price:479, power:120, specs:{'Socket':'AM5','Cores/Threads':'8/16','3D Cache':'Yes'}, socket:'AM5', tier:5 },
-      { name:'AMD Ryzen 9 7950X3D', tag:'AM5 · 16C/32T', price:599, power:120, specs:{'Socket':'AM5','Cores/Threads':'16/32','Boost':'5.7GHz'}, socket:'AM5', tier:6 },
-      { name:'Intel Core i3-14100F', tag:'LGA1700 · 4C/8T', price:109, power:58, specs:{'Socket':'LGA1700','Cores/Threads':'4/8','Boost':'4.7GHz'}, socket:'LGA1700', tier:1 },
-      { name:'Intel Core i5-14400F', tag:'LGA1700 · 10C/16T', price:199, power:65, specs:{'Socket':'LGA1700','Cores/Threads':'10/16','Boost':'4.7GHz'}, socket:'LGA1700', tier:2 },
-      { name:'Intel Core i5-14600KF', tag:'LGA1700 · 14C/20T', price:269, power:125, specs:{'Socket':'LGA1700','Cores/Threads':'14/20','Boost':'5.3GHz'}, socket:'LGA1700', tier:3 },
-      { name:'Intel Core i7-14700K', tag:'LGA1700 · 20C/28T', price:399, power:125, specs:{'Socket':'LGA1700','Cores/Threads':'20/28','Boost':'5.6GHz'}, socket:'LGA1700', tier:4 },
-      { name:'Intel Core i9-14900KS', tag:'LGA1700 · 24C/32T', price:689, power:150, specs:{'Socket':'LGA1700','Cores/Threads':'24/32','Boost':'6.2GHz'}, socket:'LGA1700', tier:6 }
+      { name:'AMD Ryzen 5 7600', tag:'AM5 · 6C/12T', price:199, power:65, image:'', specs:{'Socket':'AM5','Cores/Threads':'6/12','Boost':'5.1GHz'}, socket:'AM5', tier:2 },
+      { name:'AMD Ryzen 5 7600X', tag:'AM5 · 6C/12T', price:219, power:105, image:'', specs:{'Socket':'AM5','Cores/Threads':'6/12','Boost':'5.3GHz'}, socket:'AM5', tier:3 },
+      { name:'AMD Ryzen 5 9600X', tag:'AM5 · 6C/12T', price:279, power:65, image:'', specs:{'Socket':'AM5','Cores/Threads':'6/12','Boost':'5.4GHz'}, socket:'AM5', tier:3, featured:true },
+      { name:'AMD Ryzen 7 7800X3D', tag:'AM5 · 8C/16T', price:399, power:120, image:'', specs:{'Socket':'AM5','Cores/Threads':'8/16','3D Cache':'Yes'}, socket:'AM5', tier:4, featured:true },
+      { name:'AMD Ryzen 7 9800X3D', tag:'AM5 · 8C/16T', price:479, power:120, image:'', specs:{'Socket':'AM5','Cores/Threads':'8/16','3D Cache':'Yes'}, socket:'AM5', tier:5 },
+      { name:'AMD Ryzen 9 7950X3D', tag:'AM5 · 16C/32T', price:599, power:120, image:'', specs:{'Socket':'AM5','Cores/Threads':'16/32','Boost':'5.7GHz'}, socket:'AM5', tier:6 },
+      { name:'Intel Core i3-14100F', tag:'LGA1700 · 4C/8T', price:109, power:58, image:'', specs:{'Socket':'LGA1700','Cores/Threads':'4/8','Boost':'4.7GHz'}, socket:'LGA1700', tier:1 },
+      { name:'Intel Core i5-14400F', tag:'LGA1700 · 10C/16T', price:199, power:65, image:'', specs:{'Socket':'LGA1700','Cores/Threads':'10/16','Boost':'4.7GHz'}, socket:'LGA1700', tier:2 },
+      { name:'Intel Core i5-14600KF', tag:'LGA1700 · 14C/20T', price:269, power:125, image:'', specs:{'Socket':'LGA1700','Cores/Threads':'14/20','Boost':'5.3GHz'}, socket:'LGA1700', tier:3 },
+      { name:'Intel Core i7-14700K', tag:'LGA1700 · 20C/28T', price:399, power:125, image:'', specs:{'Socket':'LGA1700','Cores/Threads':'20/28','Boost':'5.6GHz'}, socket:'LGA1700', tier:4 },
+      { name:'Intel Core i9-14900KS', tag:'LGA1700 · 24C/32T', price:689, power:150, image:'', specs:{'Socket':'LGA1700','Cores/Threads':'24/32','Boost':'6.2GHz'}, socket:'LGA1700', tier:6 }
     ]},
   { id:'board', name:'Motherboard', en:'Motherboard', icon:'board',
     note:'Must match the socket of the CPU you selected.',
     items:[
-      { name:'ASRock B650M-HDV/M.2', tag:'AM5 · mATX', price:99, specs:{'Socket':'AM5','Memory':'DDR5','Form factor':'mATX'}, socket:'AM5' },
-      { name:'MSI PRO B650-P WIFI', tag:'AM5 · ATX', price:139, specs:{'Socket':'AM5','Memory':'DDR5','Wi-Fi':'Yes'}, socket:'AM5' },
-      { name:'Gigabyte B650 AORUS Elite AX', tag:'AM5 · ATX', price:189, specs:{'Socket':'AM5','Memory':'DDR5','Wi-Fi':'Yes'}, socket:'AM5', featured:true },
-      { name:'ASUS ROG STRIX B650E-F', tag:'AM5 · ATX', price:269, specs:{'Socket':'AM5','Memory':'DDR5','PCIe':'5.0'}, socket:'AM5' },
-      { name:'ASUS ROG CROSSHAIR X670E HERO', tag:'AM5 · ATX', price:649, specs:{'Socket':'AM5','Memory':'DDR5','Premium':'Yes'}, socket:'AM5' },
-      { name:'ASRock H610M-HVS', tag:'LGA1700 · mATX', price:79, specs:{'Socket':'LGA1700','Memory':'DDR4','Form factor':'mATX'}, socket:'LGA1700' },
-      { name:'MSI PRO B760M-A WIFI DDR4', tag:'LGA1700 · mATX', price:129, specs:{'Socket':'LGA1700','Memory':'DDR4','Wi-Fi':'Yes'}, socket:'LGA1700' },
-      { name:'Gigabyte B760 AORUS ELITE AX', tag:'LGA1700 · ATX', price:169, specs:{'Socket':'LGA1700','Memory':'DDR5','Wi-Fi':'Yes'}, socket:'LGA1700', featured:true },
-      { name:'MSI MAG Z790 TOMAHAWK WIFI', tag:'LGA1700 · ATX', price:239, specs:{'Socket':'LGA1700','Memory':'DDR5','Overclocking':'Yes'}, socket:'LGA1700' },
-      { name:'ASUS ROG MAXIMUS Z790 DARK HERO', tag:'LGA1700 · ATX', price:699, specs:{'Socket':'LGA1700','Memory':'DDR5','Premium':'Yes'}, socket:'LGA1700' }
+      { name:'ASRock B650M-HDV/M.2', tag:'AM5 · mATX', price:99, image:'', specs:{'Socket':'AM5','Memory':'DDR5','Form factor':'mATX'}, socket:'AM5' },
+      { name:'MSI PRO B650-P WIFI', tag:'AM5 · ATX', price:139, image:'', specs:{'Socket':'AM5','Memory':'DDR5','Wi-Fi':'Yes'}, socket:'AM5' },
+      { name:'Gigabyte B650 AORUS Elite AX', tag:'AM5 · ATX', price:189, image:'', specs:{'Socket':'AM5','Memory':'DDR5','Wi-Fi':'Yes'}, socket:'AM5', featured:true },
+      { name:'ASUS ROG STRIX B650E-F', tag:'AM5 · ATX', price:269, image:'', specs:{'Socket':'AM5','Memory':'DDR5','PCIe':'5.0'}, socket:'AM5' },
+      { name:'ASUS ROG CROSSHAIR X670E HERO', tag:'AM5 · ATX', price:649, image:'', specs:{'Socket':'AM5','Memory':'DDR5','Premium':'Yes'}, socket:'AM5' },
+      { name:'ASRock H610M-HVS', tag:'LGA1700 · mATX', price:79, image:'', specs:{'Socket':'LGA1700','Memory':'DDR4','Form factor':'mATX'}, socket:'LGA1700' },
+      { name:'MSI PRO B760M-A WIFI DDR4', tag:'LGA1700 · mATX', price:129, image:'', specs:{'Socket':'LGA1700','Memory':'DDR4','Wi-Fi':'Yes'}, socket:'LGA1700' },
+      { name:'Gigabyte B760 AORUS ELITE AX', tag:'LGA1700 · ATX', price:169, image:'', specs:{'Socket':'LGA1700','Memory':'DDR5','Wi-Fi':'Yes'}, socket:'LGA1700', featured:true },
+      { name:'MSI MAG Z790 TOMAHAWK WIFI', tag:'LGA1700 · ATX', price:239, image:'', specs:{'Socket':'LGA1700','Memory':'DDR5','Overclocking':'Yes'}, socket:'LGA1700' },
+      { name:'ASUS ROG MAXIMUS Z790 DARK HERO', tag:'LGA1700 · ATX', price:699, image:'', specs:{'Socket':'LGA1700','Memory':'DDR5','Premium':'Yes'}, socket:'LGA1700' }
     ]},
   { id:'ram', name:'Memory', en:'Memory', icon:'ram',
     note:'Dual-channel (2 sticks or more) is recommended for best performance.',
     items:[
-      { name:'Crucial 16GB (8x2)', tag:'DDR4 · 3200MHz', price:32, specs:{'Type':'DDR4','Capacity':'16GB','Speed':'3200MHz'}, ram:'DDR4' },
-      { name:'Corsair Vengeance LPX 32GB (16x2)', tag:'DDR4 · 3600MHz', price:75, specs:{'Type':'DDR4','Capacity':'32GB','Speed':'3600MHz'}, ram:'DDR4' },
-      { name:'Crucial Pro 32GB (16x2)', tag:'DDR5 · 5600MHz', price:85, specs:{'Type':'DDR5','Capacity':'32GB','Speed':'5600MHz'}, ram:'DDR5' },
-      { name:'G.Skill Flare X5 32GB (16x2)', tag:'DDR5 · 6000MHz CL30', price:105, specs:{'Type':'DDR5','Capacity':'32GB','Speed':'6000MHz'}, ram:'DDR5', featured:true },
-      { name:'Corsair Vengeance RGB 32GB (16x2)', tag:'DDR5 · 6000MHz', price:119, specs:{'Type':'DDR5','Capacity':'32GB','RGB':'Yes'}, ram:'DDR5' },
-      { name:'G.Skill Trident Z5 RGB 64GB (32x2)', tag:'DDR5 · 6400MHz', price:215, specs:{'Type':'DDR5','Capacity':'64GB','Speed':'6400MHz'}, ram:'DDR5' },
-      { name:'Corsair Dominator Titanium 64GB', tag:'DDR5 · 7200MHz', price:339, specs:{'Type':'DDR5','Capacity':'64GB','Premium':'Yes'}, ram:'DDR5' },
-      { name:'G.Skill Trident Z5 96GB (48x2)', tag:'DDR5 · 6800MHz', price:399, specs:{'Type':'DDR5','Capacity':'96GB','Workstation':'Yes'}, ram:'DDR5' }
+      { name:'Crucial 16GB (8x2)', tag:'DDR4 · 3200MHz', price:32, image:'', specs:{'Type':'DDR4','Capacity':'16GB','Speed':'3200MHz'}, ram:'DDR4' },
+      { name:'Corsair Vengeance LPX 32GB (16x2)', tag:'DDR4 · 3600MHz', price:75, image:'', specs:{'Type':'DDR4','Capacity':'32GB','Speed':'3600MHz'}, ram:'DDR4' },
+      { name:'Crucial Pro 32GB (16x2)', tag:'DDR5 · 5600MHz', price:85, image:'', specs:{'Type':'DDR5','Capacity':'32GB','Speed':'5600MHz'}, ram:'DDR5' },
+      { name:'G.Skill Flare X5 32GB (16x2)', tag:'DDR5 · 6000MHz CL30', price:105, image:'', specs:{'Type':'DDR5','Capacity':'32GB','Speed':'6000MHz'}, ram:'DDR5', featured:true },
+      { name:'Corsair Vengeance RGB 32GB (16x2)', tag:'DDR5 · 6000MHz', price:119, image:'', specs:{'Type':'DDR5','Capacity':'32GB','RGB':'Yes'}, ram:'DDR5' },
+      { name:'G.Skill Trident Z5 RGB 64GB (32x2)', tag:'DDR5 · 6400MHz', price:215, image:'', specs:{'Type':'DDR5','Capacity':'64GB','Speed':'6400MHz'}, ram:'DDR5' },
+      { name:'Corsair Dominator Titanium 64GB', tag:'DDR5 · 7200MHz', price:339, image:'', specs:{'Type':'DDR5','Capacity':'64GB','Premium':'Yes'}, ram:'DDR5' },
+      { name:'G.Skill Trident Z5 96GB (48x2)', tag:'DDR5 · 6800MHz', price:399, image:'', specs:{'Type':'DDR5','Capacity':'96GB','Workstation':'Yes'}, ram:'DDR5' }
     ]},
   { id:'gpu', name:'Graphics Card', en:'GPU', icon:'gpu',
     note:'The biggest factor in gaming frame rate. Pick based on the resolution you play at.',
     items:[
-      { name:'Radeon RX 6600 8GB', tag:'Budget 1080p', price:199, power:132, specs:{'VRAM':'8GB','Best for':'1080p'} },
-      { name:'Radeon RX 7600 8GB', tag:'Modern 1080p', price:259, power:165, specs:{'VRAM':'8GB','Best for':'1080p'} },
-      { name:'RTX 4060 8GB', tag:'Smooth 1080p', price:289, power:115, specs:{'VRAM':'8GB','Features':'DLSS 3'} },
-      { name:'Radeon RX 7700 XT 12GB', tag:'High FPS 1080p', price:419, power:245, specs:{'VRAM':'12GB','Best for':'1080p–1440p'} },
-      { name:'RTX 4060 Ti 8GB', tag:'1080p–1440p', price:399, power:160, specs:{'VRAM':'8GB','Best for':'1080–1440p'}, featured:true },
-      { name:'Radeon RX 7800 XT 16GB', tag:'Great 1440p', price:499, power:263, specs:{'VRAM':'16GB','Best for':'1440p'} },
-      { name:'RTX 4070 SUPER 12GB', tag:'Comfortable 1440p', price:599, power:220, specs:{'VRAM':'12GB','Best for':'1440p'} },
-      { name:'Radeon RX 7900 XT 20GB', tag:'1440p–4K', price:739, power:315, specs:{'VRAM':'20GB','Best for':'4K Gaming'} },
-      { name:'RTX 4070 Ti SUPER 16GB', tag:'1440p–4K', price:799, power:285, specs:{'VRAM':'16GB','Best for':'1440–4K'}, featured:true },
-      { name:'Radeon RX 7900 XTX 24GB', tag:'High-End 4K', price:949, power:355, specs:{'VRAM':'24GB','Best for':'4K Gaming'} },
-      { name:'RTX 4080 SUPER 16GB', tag:'Premium 4K', price:999, power:320, specs:{'VRAM':'16GB','Best for':'4K Gaming'} },
-      { name:'RTX 4090 24GB', tag:'Uncompromised 4K', price:1799, power:450, specs:{'VRAM':'24GB','Best for':'8K / AI workloads'} }
+      { name:'Radeon RX 6600 8GB', tag:'Budget 1080p', price:199, power:132, image:'', specs:{'VRAM':'8GB','Best for':'1080p'} },
+      { name:'Radeon RX 7600 8GB', tag:'Modern 1080p', price:259, power:165, image:'', specs:{'VRAM':'8GB','Best for':'1080p'} },
+      { name:'RTX 4060 8GB', tag:'Smooth 1080p', price:289, power:115, image:'', specs:{'VRAM':'8GB','Features':'DLSS 3'} },
+      { name:'Radeon RX 7700 XT 12GB', tag:'High FPS 1080p', price:419, power:245, image:'', specs:{'VRAM':'12GB','Best for':'1080p–1440p'} },
+      { name:'RTX 4060 Ti 8GB', tag:'1080p–1440p', price:399, power:160, image:'', specs:{'VRAM':'8GB','Best for':'1080–1440p'}, featured:true },
+      { name:'Radeon RX 7800 XT 16GB', tag:'Great 1440p', price:499, power:263, image:'', specs:{'VRAM':'16GB','Best for':'1440p'} },
+      { name:'RTX 4070 SUPER 12GB', tag:'Comfortable 1440p', price:599, power:220, image:'', specs:{'VRAM':'12GB','Best for':'1440p'} },
+      { name:'Radeon RX 7900 XT 20GB', tag:'1440p–4K', price:739, power:315, image:'', specs:{'VRAM':'20GB','Best for':'4K Gaming'} },
+      { name:'RTX 4070 Ti SUPER 16GB', tag:'1440p–4K', price:799, power:285, image:'', specs:{'VRAM':'16GB','Best for':'1440–4K'}, featured:true },
+      { name:'Radeon RX 7900 XTX 24GB', tag:'High-End 4K', price:949, power:355, image:'', specs:{'VRAM':'24GB','Best for':'4K Gaming'} },
+      { name:'RTX 4080 SUPER 16GB', tag:'Premium 4K', price:999, power:320, image:'', specs:{'VRAM':'16GB','Best for':'4K Gaming'} },
+      { name:'RTX 4090 24GB', tag:'Uncompromised 4K', price:1799, power:450, image:'', specs:{'VRAM':'24GB','Best for':'8K / AI workloads'} }
     ]},
   { id:'storage', name:'Storage', en:'Storage', icon:'storage',
     note:'You can pick more than one — e.g. a fast SSD for boot plus an HDD for bulk storage.',
     multi:true,
     items:[
-      { name:'Kingston A400 480GB SATA', tag:'Budget Boot Drive', price:29, specs:{'Capacity':'480GB','Interface':'SATA SSD'} },
-      { name:'Crucial P3 500GB NVMe', tag:'~3,500MB/s read', price:39, specs:{'Capacity':'500GB','Interface':'NVMe Gen3'} },
-      { name:'WD Blue SN580 1TB NVMe', tag:'~4,150MB/s read', price:64, specs:{'Capacity':'1TB','Interface':'NVMe Gen4'} },
-      { name:'Samsung 990 EVO 1TB', tag:'~5,000MB/s read', price:85, specs:{'Capacity':'1TB','Interface':'NVMe Gen4/5'} },
-      { name:'WD Black SN850X 2TB', tag:'~7,300MB/s read', price:149, specs:{'Capacity':'2TB','Interface':'NVMe Gen4'}, featured:true },
-      { name:'Samsung 990 PRO 2TB', tag:'~7,450MB/s read', price:169, specs:{'Capacity':'2TB','Interface':'NVMe Gen4'} },
-      { name:'Crucial T700 2TB NVMe Gen5', tag:'~12,400MB/s read', price:279, specs:{'Capacity':'2TB','Interface':'NVMe Gen5'} },
-      { name:'Samsung 990 PRO 4TB', tag:'~7,450MB/s read', price:319, specs:{'Capacity':'4TB','Interface':'NVMe Gen4'} },
-      { name:'Seagate Barracuda 2TB HDD', tag:'Bulk storage', price:55, specs:{'Capacity':'2TB','Spin speed':'7200RPM'} },
-      { name:'Toshiba X300 8TB HDD', tag:'Massive bulk storage', price:145, specs:{'Capacity':'8TB','Spin speed':'7200RPM'} }
+      { name:'Kingston A400 480GB SATA', tag:'Budget Boot Drive', price:29, image:'', specs:{'Capacity':'480GB','Interface':'SATA SSD'} },
+      { name:'Crucial P3 500GB NVMe', tag:'~3,500MB/s read', price:39, image:'', specs:{'Capacity':'500GB','Interface':'NVMe Gen3'} },
+      { name:'WD Blue SN580 1TB NVMe', tag:'~4,150MB/s read', price:64, image:'', specs:{'Capacity':'1TB','Interface':'NVMe Gen4'} },
+      { name:'Samsung 990 EVO 1TB', tag:'~5,000MB/s read', price:85, image:'', specs:{'Capacity':'1TB','Interface':'NVMe Gen4/5'} },
+      { name:'WD Black SN850X 2TB', tag:'~7,300MB/s read', price:149, image:'', specs:{'Capacity':'2TB','Interface':'NVMe Gen4'}, featured:true },
+      { name:'Samsung 990 PRO 2TB', tag:'~7,450MB/s read', price:169, image:'', specs:{'Capacity':'2TB','Interface':'NVMe Gen4'} },
+      { name:'Crucial T700 2TB NVMe Gen5', tag:'~12,400MB/s read', price:279, image:'', specs:{'Capacity':'2TB','Interface':'NVMe Gen5'} },
+      { name:'Samsung 990 PRO 4TB', tag:'~7,450MB/s read', price:319, image:'', specs:{'Capacity':'4TB','Interface':'NVMe Gen4'} },
+      { name:'Seagate Barracuda 2TB HDD', tag:'Bulk storage', price:55, image:'', specs:{'Capacity':'2TB','Spin speed':'7200RPM'} },
+      { name:'Toshiba X300 8TB HDD', tag:'Massive bulk storage', price:145, image:'', specs:{'Capacity':'8TB','Spin speed':'7200RPM'} }
     ]},
   { id:'psu', name:'Power Supply', en:'PSU', icon:'psu',
     note:'Leave at least 20% headroom above your estimated total power draw.',
     items:[
-      { name:'Thermaltake Smart 500W', tag:'80+ White', price:39, wattage:500, specs:{'Wattage':'500W','Rating':'80+'} },
-      { name:'EVGA 600 BA 600W', tag:'80+ Bronze', price:54, wattage:600, specs:{'Wattage':'600W','Rating':'80+ Bronze'} },
-      { name:'Corsair CX650M 650W', tag:'Semi-modular', price:69, wattage:650, specs:{'Wattage':'650W','Rating':'80+ Bronze'}, featured:true },
-      { name:'Seasonic Focus GX-750 750W', tag:'Fully modular', price:95, wattage:750, specs:{'Wattage':'750W','Rating':'80+ Gold'} },
-      { name:'Corsair RM850e 850W', tag:'ATX 3.0 Compatible', price:119, wattage:850, specs:{'Wattage':'850W','Rating':'80+ Gold'}, featured:true },
-      { name:'MSI MPG A1000G 1000W', tag:'ATX 3.0 / PCIe 5.0', price:169, wattage:1000, specs:{'Wattage':'1000W','Rating':'80+ Gold'} },
-      { name:'Corsair RM1200x Shift', tag:'Side Interface', price:219, wattage:1200, specs:{'Wattage':'1200W','Rating':'80+ Gold'} },
-      { name:'Seasonic Prime TX-1300', tag:'Extreme Power', price:359, wattage:1300, specs:{'Wattage':'1300W','Rating':'80+ Titanium'} }
+      { name:'Thermaltake Smart 500W', tag:'80+ White', price:39, wattage:500, image:'', specs:{'Wattage':'500W','Rating':'80+'} },
+      { name:'EVGA 600 BA 600W', tag:'80+ Bronze', price:54, wattage:600, image:'', specs:{'Wattage':'600W','Rating':'80+ Bronze'} },
+      { name:'Corsair CX650M 650W', tag:'Semi-modular', price:69, wattage:650, image:'', specs:{'Wattage':'650W','Rating':'80+ Bronze'}, featured:true },
+      { name:'Seasonic Focus GX-750 750W', tag:'Fully modular', price:95, wattage:750, image:'', specs:{'Wattage':'750W','Rating':'80+ Gold'} },
+      { name:'Corsair RM850e 850W', tag:'ATX 3.0 Compatible', price:119, wattage:850, image:'', specs:{'Wattage':'850W','Rating':'80+ Gold'}, featured:true },
+      { name:'MSI MPG A1000G 1000W', tag:'ATX 3.0 / PCIe 5.0', price:169, wattage:1000, image:'', specs:{'Wattage':'1000W','Rating':'80+ Gold'} },
+      { name:'Corsair RM1200x Shift', tag:'Side Interface', price:219, wattage:1200, image:'', specs:{'Wattage':'1200W','Rating':'80+ Gold'} },
+      { name:'Seasonic Prime TX-1300', tag:'Extreme Power', price:359, wattage:1300, image:'', specs:{'Wattage':'1300W','Rating':'80+ Titanium'} }
     ]},
   { id:'case', name:'Case', en:'Case', icon:'case',
     note:'Pick based on your motherboard size and the style you like.',
     items:[
-      { name:'Cooler Master Q300L', tag:'mATX · Compact', price:45, specs:{'Supports':'mATX/ITX','Size':'Compact'} },
-      { name:'Montech AIR 903 BASE', tag:'E-ATX · High Airflow', price:65, specs:{'Supports':'E-ATX/ATX','Fans':'3 included'} },
-      { name:'Corsair 4000D Airflow', tag:'ATX · Classic', price:94, specs:{'Supports':'E-ATX/ATX','Front':'Mesh'} },
-      { name:'NZXT H6 Flow', tag:'ATX · Dual Chamber', price:109, specs:{'Supports':'ATX/mATX','Design':'Glass corner'} },
-      { name:'Lian Li LANCOOL 216', tag:'ATX · Excellent airflow', price:100, specs:{'Supports':'E-ATX/ATX','Fans':'3 large fans'}, featured:true },
-      { name:'Fractal Design North', tag:'ATX · Wood front panel', price:139, specs:{'Supports':'ATX/mATX','Material':'Wood accent'} },
-      { name:'Hyte Y60', tag:'ATX · Panoramic Glass', price:179, specs:{'Supports':'E-ATX/ATX','Design':'Fish tank'} },
-      { name:'Lian Li O11 Dynamic EVO', tag:'ATX · Showcase', price:159, specs:{'Supports':'E-ATX/ATX','Modularity':'Reversible'} },
-      { name:'Fractal Design Torrent', tag:'E-ATX · Ultimate Airflow', price:189, specs:{'Supports':'E-ATX/ATX','Fans':'2x180mm included'} }
+      { name:'Cooler Master Q300L', tag:'mATX · Compact', price:45, image:'', specs:{'Supports':'mATX/ITX','Size':'Compact'} },
+      { name:'Montech AIR 903 BASE', tag:'E-ATX · High Airflow', price:65, image:'', specs:{'Supports':'E-ATX/ATX','Fans':'3 included'} },
+      { name:'Corsair 4000D Airflow', tag:'ATX · Classic', price:94, image:'', specs:{'Supports':'E-ATX/ATX','Front':'Mesh'} },
+      { name:'NZXT H6 Flow', tag:'ATX · Dual Chamber', price:109, image:'', specs:{'Supports':'ATX/mATX','Design':'Glass corner'} },
+      { name:'Lian Li LANCOOL 216', tag:'ATX · Excellent airflow', price:100, image:'', specs:{'Supports':'E-ATX/ATX','Fans':'3 large fans'}, featured:true },
+      { name:'Fractal Design North', tag:'ATX · Wood front panel', price:139, image:'', specs:{'Supports':'ATX/mATX','Material':'Wood accent'} },
+      { name:'Hyte Y60', tag:'ATX · Panoramic Glass', price:179, image:'', specs:{'Supports':'E-ATX/ATX','Design':'Fish tank'} },
+      { name:'Lian Li O11 Dynamic EVO', tag:'ATX · Showcase', price:159, image:'', specs:{'Supports':'E-ATX/ATX','Modularity':'Reversible'} },
+      { name:'Fractal Design Torrent', tag:'E-ATX · Ultimate Airflow', price:189, image:'', specs:{'Supports':'E-ATX/ATX','Fans':'2x180mm included'} }
     ]},
   { id:'cooler', name:'CPU Cooler', en:'CPU Cooler', icon:'cooler',
     note:'High-end CPUs (X3D, K-series) benefit from a liquid cooler for lower temperatures.',
     items:[
-      { name:'Stock Cooler', tag:'Included with CPU', price:0, specs:{'Type':'Air','Noise':'Moderate'} },
-      { name:'Thermalright Peerless Assassin 120', tag:'Dual Tower', price:34, specs:{'Type':'Air','Heatpipes':'6'}, featured:true },
-      { name:'DeepCool AK620', tag:'High Performance Air', price:55, specs:{'Type':'Air','TDP':'260W'} },
-      { name:'Noctua NH-D15', tag:'Premium Air Cooler', price:119, specs:{'Type':'Air','Noise':'Ultra Quiet'} },
-      { name:'Arctic Liquid Freezer III 240', tag:'Quiet 240mm AIO', price:86, specs:{'Type':'Liquid','Radiator':'240mm'} },
-      { name:'NZXT Kraken 240', tag:'LCD Screen AIO', price:135, specs:{'Type':'Liquid','Radiator':'240mm'} },
-      { name:'Arctic Liquid Freezer III 360', tag:'Performance 360mm', price:115, specs:{'Type':'Liquid','Radiator':'360mm'}, featured:true },
-      { name:'Corsair iCUE H150i ELITE', tag:'RGB 360mm AIO', price:179, specs:{'Type':'Liquid','Radiator':'360mm'} },
-      { name:'Lian Li Galahad II LCD 360', tag:'Premium 360mm AIO', price:249, specs:{'Type':'Liquid','Radiator':'360mm'} }
+      { name:'Stock Cooler', tag:'Included with CPU', price:0, image:'', specs:{'Type':'Air','Noise':'Moderate'} },
+      { name:'Thermalright Peerless Assassin 120', tag:'Dual Tower', price:34, image:'', specs:{'Type':'Air','Heatpipes':'6'}, featured:true },
+      { name:'DeepCool AK620', tag:'High Performance Air', price:55, image:'', specs:{'Type':'Air','TDP':'260W'} },
+      { name:'Noctua NH-D15', tag:'Premium Air Cooler', price:119, image:'', specs:{'Type':'Air','Noise':'Ultra Quiet'} },
+      { name:'Arctic Liquid Freezer III 240', tag:'Quiet 240mm AIO', price:86, image:'', specs:{'Type':'Liquid','Radiator':'240mm'} },
+      { name:'NZXT Kraken 240', tag:'LCD Screen AIO', price:135, image:'', specs:{'Type':'Liquid','Radiator':'240mm'} },
+      { name:'Arctic Liquid Freezer III 360', tag:'Performance 360mm', price:115, image:'', specs:{'Type':'Liquid','Radiator':'360mm'}, featured:true },
+      { name:'Corsair iCUE H150i ELITE', tag:'RGB 360mm AIO', price:179, image:'', specs:{'Type':'Liquid','Radiator':'360mm'} },
+      { name:'Lian Li Galahad II LCD 360', tag:'Premium 360mm AIO', price:249, image:'', specs:{'Type':'Liquid','Radiator':'360mm'} }
     ]}
 ];
 
@@ -741,6 +752,13 @@ function renderSteps(){
   });
 }
 
+function mediaHtml(cat, item){
+  if (item.image){
+    return `<img class="prod-img" src="${item.image}" alt="${item.name.replace(/"/g,'&quot;')}" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'icon-wrap',innerHTML:ICONS['${cat.icon}']}))">`;
+  }
+  return `<div class="icon-wrap">${ICONS[cat.icon]}</div>`;
+}
+
 function renderGrid(){
   const cat = getCat(activeCat);
   catTitleEl.textContent = cat.name;
@@ -769,7 +787,7 @@ function renderGrid(){
         <div class="card-image" style="--hue-a:${ha}; --hue-b:${hb};">
           ${item.featured ? '<span class="badge">Recommended</span>' : ''}
           <div class="shine"></div>
-          <div class="icon-wrap">${ICONS[cat.icon]}</div>
+          ${mediaHtml(cat, item)}
         </div>
         <div class="card-body">
           <div class="card-title">${item.name}</div>
@@ -887,7 +905,7 @@ function renderCartPage(){
 
   listEl.innerHTML = flat.map(({cat,item}, i) => `
     <div class="cart-row" style="animation-delay:${i*30}ms" data-cat="${cat.id}" data-name="${item.name.replace(/"/g,'&quot;')}">
-      <div class="ic">${ICONS[cat.icon]}</div>
+      <div class="ic">${item.image ? `<img src="${item.image}" alt="${item.name.replace(/"/g,'&quot;')}" onerror="this.replaceWith(Object.assign(document.createElement('span'),{innerHTML:ICONS['${cat.icon}']}))">` : ICONS[cat.icon]}</div>
       <div class="info">
         <div class="cat">${cat.name}</div>
         <div class="nm">${item.name}</div>
