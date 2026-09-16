@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PC Builder — 500+ Hardware Parts</title>
+<title>PC Builder — Configure Your Rig</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -15,718 +15,1038 @@
     --line-soft: #262a33;
     --text: #ece9e2;
     --text-dim: #9aa1ac;
-    --accent: #22d3ee;
-    --accent-glow: rgba(34, 211, 238, 0.15);
-    --warn: #fb7185;
-    --warn-bg: rgba(251, 113, 133, 0.1);
-    --ok: #34d399;
-    --ok-bg: rgba(52, 211, 153, 0.1);
-    --gold: #f59e0b;
-    --font-heading: 'Space Grotesk', sans-serif;
-    --font-body: 'Inter', sans-serif;
-    --font-mono: 'IBM Plex Mono', monospace;
+    --text-faint: #656c78;
+    --copper: #d08a4c;
+    --copper-bright: #f0a868;
+    --green: #7bab82;
+    --red: #c96a5c;
+    --radius-s: 4px;
+    --radius-m: 8px;
+    --ease: cubic-bezier(.22,1,.36,1);
+  }
+  :root:not([data-theme="light"]){ color-scheme: dark; }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      radial-gradient(1200px 700px at 15% -10%, rgba(208,138,76,0.07), transparent 60%),
+      radial-gradient(900px 600px at 100% 0%, rgba(123,171,130,0.05), transparent 55%),
+      var(--bg);
+    color:var(--text);
+    font-family:'Inter',sans-serif;
+    -webkit-font-smoothing:antialiased;
+    min-height:100vh;
+  }
+  ::selection{background:var(--copper);color:#14171c;}
+
+  h1,h2,h3,.display{
+    font-family:'Space Grotesk',sans-serif;
+    letter-spacing:-0.01em;
+  }
+  .mono{font-family:'IBM Plex Mono',monospace;}
+  a{color:inherit;}
+
+  @keyframes fadeUp{
+    from{opacity:0; transform:translateY(14px) scale(.985);}
+    to{opacity:1; transform:translateY(0) scale(1);}
+  }
+  @keyframes pop{
+    0%{transform:scale(.4); opacity:0;}
+    60%{transform:scale(1.15); opacity:1;}
+    100%{transform:scale(1);}
+  }
+  @keyframes shimmer{
+    0%{transform:translateX(-120%) skewX(-15deg);}
+    100%{transform:translateX(220%) skewX(-15deg);}
+  }
+  @keyframes floaty{
+    0%,100%{transform:translateY(0);}
+    50%{transform:translateY(-4px);}
+  }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
+
+  /* ---------- Top bar ---------- */
+  .topbar{
+    position:sticky; top:0; z-index:40;
+    background:rgba(15,17,21,0.82);
+    backdrop-filter:blur(10px) saturate(140%);
+    border-bottom:1px solid var(--line-soft);
+    padding:14px 24px;
+    display:flex; align-items:center; justify-content:space-between;
+    gap:16px; flex-wrap:wrap;
+  }
+  .brand{display:flex; align-items:baseline; gap:10px; cursor:pointer;}
+  .brand .mark{
+    width:26px;height:26px;
+    display:inline-flex;align-items:center;justify-content:center;
+    border:1.5px solid var(--copper);
+    border-radius:var(--radius-s);
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12px;color:var(--copper);
+    flex:none;
+    animation:floaty 4s ease-in-out infinite;
+  }
+  .brand .name{font-size:18px;font-weight:600;}
+  .brand .name .sub{color:var(--text-dim);font-weight:400;font-size:13px;margin-left:6px;}
+
+  .topnav{display:flex; align-items:center; gap:4px;}
+  .topnav-link{
+    font-size:13px; padding:8px 12px; border-radius:20px; color:var(--text-dim);
+    cursor:pointer; border:1px solid transparent; display:flex; align-items:center; gap:6px;
+    transition:all .2s var(--ease);
+  }
+  .topnav-link:hover{color:var(--text);}
+  .topnav-link.active{background:var(--panel); border-color:var(--line); color:var(--text);}
+  .topnav-link .badge-count{
+    background:var(--copper); color:#171310; font-size:10.5px; font-weight:700;
+    border-radius:20px; min-width:16px; height:16px; padding:0 4px;
+    display:flex; align-items:center; justify-content:center; font-family:'IBM Plex Mono',monospace;
   }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: var(--font-body);
-    font-size: 14px;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
+  .topbar-total{display:flex; align-items:center; gap:14px; font-family:'IBM Plex Mono',monospace;}
+  .topbar-total .amt{font-size:17px;color:var(--copper-bright); transition:transform .25s var(--ease);}
+  .topbar-total .amt.bump{animation:bump .32s var(--ease);}
+  @keyframes bump{0%{transform:scale(1);}40%{transform:scale(1.18);color:#ffce9c;}100%{transform:scale(1);}}
+  .topbar-total .lbl{font-size:11px; color:var(--text-dim);}
+
+  .page{ display:none; }
+  .page.active{ display:block; }
+
+  /* ---------- Build page layout ---------- */
+  .layout{display:grid; grid-template-columns:248px 1fr 300px; gap:0; max-width:1480px; margin:0 auto; align-items:start;}
+
+  .steps{position:sticky; top:61px; padding:22px 12px 40px 24px; display:flex; flex-direction:column; height:calc(100vh - 61px); overflow-y:auto;}
+  .steps-title{font-size:11px; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-faint); margin:0 0 14px 4px; font-weight:600;}
+  .step{
+    display:flex; align-items:flex-start; gap:10px; padding:9px 10px; border-radius:var(--radius-m);
+    cursor:pointer; border:1px solid transparent; margin-bottom:2px; position:relative;
+    transition:background .2s var(--ease), transform .2s var(--ease);
+  }
+  .step:hover{background:var(--panel); transform:translateX(2px);}
+  .step.active{background:var(--panel); border-color:var(--line);}
+  .step.active::before{
+    content:''; position:absolute; left:-13px; top:8px; bottom:8px; width:2px;
+    background:linear-gradient(180deg,var(--copper),transparent);
+    border-radius:2px;
+  }
+  .step .num{font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--text-faint); width:16px; padding-top:2px; flex:none;}
+  .step.done .num{color:var(--green);}
+  .step-body{flex:1; min-width:0;}
+  .step-name{font-size:13.5px; font-weight:500; color:var(--text);}
+  .step-pick{font-size:11.5px; color:var(--text-dim); margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-family:'IBM Plex Mono',monospace;}
+  .step.done .step-pick{color:var(--copper);}
+  .step-check{width:15px;height:15px;flex:none;margin-top:2px; border-radius:50%; border:1.5px solid var(--line); transition:all .25s var(--ease);}
+  .step.done .step-check{background:var(--green); border-color:var(--green); display:flex;align-items:center;justify-content:center; animation:pop .3s var(--ease);}
+  .step.done .step-check::after{content:"✓"; font-size:10px; color:#14171c; line-height:1;}
+
+  .main{padding:26px 28px 120px 24px; border-left:1px solid var(--line-soft); border-right:1px solid var(--line-soft); min-height:calc(100vh - 61px); position:relative;}
+  .main-head{display:flex; align-items:flex-end; justify-content:space-between; margin-bottom:4px; gap:12px; flex-wrap:wrap;}
+  .main-head h2{font-size:23px; margin:0; font-weight:600;}
+  .main-head .count{font-size:12.5px; color:var(--text-dim); font-family:'IBM Plex Mono',monospace;}
+  .main-note{font-size:13px; color:var(--text-dim); margin:6px 0 20px; max-width:60ch; line-height:1.5;}
+  .compat-flag{display:inline-flex; align-items:center; gap:6px; font-size:12px; padding:5px 9px; border-radius:var(--radius-s); margin:0 0 18px; font-family:'IBM Plex Mono',monospace;}
+  .compat-flag.ok{background:rgba(123,171,130,0.1); color:var(--green); border:1px solid rgba(123,171,130,0.3);}
+
+  .grid{display:grid; grid-template-columns:repeat(auto-fill, minmax(258px,1fr)); gap:14px;}
+
+  .card{
+    background:var(--panel);
+    border:1px solid var(--line-soft);
+    border-radius:var(--radius-m);
+    padding:0 0 14px;
+    cursor:pointer;
+    position:relative;
+    overflow:hidden;
+    transform-style:preserve-3d;
+    transition:border-color .2s var(--ease), box-shadow .3s var(--ease), transform .12s linear;
+    animation:fadeUp .5s var(--ease) both;
+    will-change:transform;
+  }
+  .card:hover{
+    border-color:var(--copper);
+    box-shadow:0 18px 40px -18px rgba(0,0,0,.6), 0 0 0 1px rgba(208,138,76,.15), 0 0 24px -4px rgba(208,138,76,.25);
+  }
+  .card.selected{
+    border-color:var(--copper);
+    box-shadow:0 0 0 1px var(--copper), 0 14px 34px -16px rgba(208,138,76,.45);
+  }
+  .card.incompatible{opacity:0.38; filter:saturate(.4);}
+
+  .card-image{
+    position:relative;
+    height:132px;
+    display:flex; align-items:center; justify-content:center;
+    background:
+      radial-gradient(120% 140% at 20% 0%, var(--hue-a) 0%, transparent 60%),
+      radial-gradient(120% 140% at 100% 100%, var(--hue-b) 0%, transparent 55%),
+      linear-gradient(160deg, var(--panel-alt), #14171d);
+    border-bottom:1px solid var(--line-soft);
+    overflow:hidden;
+  }
+  .card-image::after{
+    content:''; position:absolute; inset:0;
+    background:repeating-linear-gradient(115deg, rgba(255,255,255,0.05) 0 1px, transparent 1px 26px);
+    opacity:.5; pointer-events:none;
+  }
+  .card-image .shine{
+    position:absolute; top:0; left:0; width:40%; height:100%;
+    background:linear-gradient(100deg, transparent, rgba(255,255,255,.16), transparent);
+    transform:translateX(-120%) skewX(-15deg);
+    pointer-events:none;
+  }
+  .card:hover .card-image .shine{animation:shimmer 1.1s ease;}
+  .card-image .icon-wrap{
+    position:relative; z-index:1;
+    width:64px; height:64px; border-radius:14px;
+    display:flex; align-items:center; justify-content:center;
+    background:rgba(255,255,255,0.04);
+    border:1px solid rgba(255,255,255,0.08);
+    color:var(--copper-bright);
+    transition:transform .35s var(--ease);
+    box-shadow:0 10px 24px -8px rgba(0,0,0,.5);
+  }
+  .card:hover .card-image .icon-wrap{transform:translateY(-4px) scale(1.06) rotate(-2deg);}
+  .card.selected .card-image .icon-wrap{color:#fff; background:rgba(208,138,76,.18); border-color:rgba(208,138,76,.4);}
+  .icon-wrap svg{width:32px;height:32px;}
+
+  .badge{
+    position:absolute; top:10px; right:10px; z-index:2;
+    font-size:9.5px; padding:3px 7px; border-radius:20px;
+    background:rgba(123,171,130,0.16); color:var(--green);
+    font-family:'IBM Plex Mono',monospace; letter-spacing:0.02em;
+    border:1px solid rgba(123,171,130,.3);
   }
 
-  header {
-    background: var(--panel);
-    border-bottom: 1px solid var(--line);
-    padding: 1rem 2rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+  .card-body{padding:14px 16px 0;}
+  .card-title{font-size:14px; font-weight:600; line-height:1.3;}
+  .card-tag{font-size:10.5px; color:var(--text-faint); margin-top:3px; font-family:'IBM Plex Mono',monospace; letter-spacing:0.02em;}
+  .card-specs{margin:12px 0 0; padding:0; list-style:none; font-size:12px; color:var(--text-dim); line-height:1.85;}
+  .card-specs li{display:flex; justify-content:space-between; gap:8px;}
+  .card-specs li span:last-child{color:var(--text); font-family:'IBM Plex Mono',monospace; font-size:11.5px; text-align:right;}
+  .card-foot{display:flex; align-items:center; justify-content:space-between; margin-top:14px; padding-top:12px; border-top:1px solid var(--line-soft);}
+  .price{font-family:'IBM Plex Mono',monospace; font-size:14.5px; color:var(--copper-bright); font-weight:600;}
+  .pick-btn{
+    font-size:11.5px; padding:6px 12px; border-radius:20px;
+    border:1px solid var(--line); background:transparent; color:var(--text-dim);
+    font-family:'Inter',sans-serif; transition:all .2s var(--ease);
   }
-  .logo { font-family: var(--font-heading); font-weight: 700; font-size: 1.25rem; }
-  .logo span { color: var(--accent); }
-  .badge { background: var(--accent-glow); color: var(--accent); padding: 2px 8px; border-radius: 4px; font-size: 11px; font-family: var(--font-mono); margin-left: 8px; border: 1px solid rgba(34, 211, 238, 0.3); }
+  .card:hover .pick-btn{border-color:var(--copper-bright); color:var(--copper-bright);}
+  .card.selected .pick-btn{background:var(--copper); border-color:var(--copper); color:#171310; font-weight:600;}
 
-  .layout {
-    display: grid;
-    grid-template-columns: 320px 1fr 340px;
-    flex: 1;
-    height: calc(100vh - 61px);
-    overflow: hidden;
+  .summary{position:sticky; top:61px; height:calc(100vh - 61px); padding:24px 24px 24px 20px; display:flex; flex-direction:column;}
+  .summary h3{font-size:14px; margin:0 0 2px; font-weight:600;}
+  .summary .sub{font-size:12px; color:var(--text-dim); margin-bottom:16px;}
+  .summary-list{flex:1; overflow-y:auto; display:flex; flex-direction:column; gap:8px; padding-right:2px;}
+  .sum-row{display:flex; justify-content:space-between; gap:10px; padding:9px 0; border-bottom:1px solid var(--line-soft); animation:fadeUp .3s var(--ease) both;}
+  .sum-row .cat{font-size:10.5px; color:var(--text-faint); text-transform:uppercase; letter-spacing:0.04em;}
+  .sum-row .item{font-size:12.5px; margin-top:2px; line-height:1.35;}
+  .sum-row .p{font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--text-dim); flex:none; padding-top:1px;}
+  .sum-empty{color:var(--text-faint); font-size:12.5px; padding:14px 0; line-height:1.6;}
+
+  .power-est{display:flex; justify-content:space-between; align-items:center; font-size:12px; color:var(--text-dim); margin:14px 0 0; font-family:'IBM Plex Mono',monospace;}
+  .power-est .v{color:var(--text); transition:color .2s;}
+  .power-est .v.warn{color:var(--red);}
+
+  .summary-total{border-top:1px solid var(--line); margin-top:16px; padding-top:16px;}
+  .summary-total .row{display:flex; justify-content:space-between; align-items:baseline;}
+  .summary-total .row .l{font-size:13px; color:var(--text-dim);}
+  .summary-total .row .v{font-family:'IBM Plex Mono',monospace; font-size:22px; color:var(--copper-bright); font-weight:600; transition:transform .25s var(--ease);}
+  .summary-total .row .v.bump{animation:bump .32s var(--ease);}
+  .btn-primary{
+    width:100%; margin-top:14px; padding:12px; border:none; border-radius:var(--radius-m);
+    background:var(--copper); color:#171310; font-weight:600; font-size:14px;
+    font-family:'Inter',sans-serif; cursor:pointer;
+    transition:transform .15s var(--ease), box-shadow .2s var(--ease), background .2s;
+    position:relative; overflow:hidden; text-align:center; display:block;
+  }
+  .btn-primary:not(:disabled):hover{transform:translateY(-1px); box-shadow:0 10px 24px -10px rgba(208,138,76,.6); background:var(--copper-bright);}
+  .btn-primary:not(:disabled):active{transform:translateY(0) scale(.98);}
+  .btn-primary:disabled{background:var(--panel-alt); color:var(--text-faint); cursor:not-allowed;}
+  .btn-ghost{
+    width:100%; padding:11px; border:1px solid var(--line); border-radius:var(--radius-m);
+    background:transparent; color:var(--text-dim); font-weight:500; font-size:13.5px;
+    font-family:'Inter',sans-serif; cursor:pointer; transition:all .2s var(--ease); text-align:center;
+  }
+  .btn-ghost:hover{border-color:var(--text-dim); color:var(--text);}
+  .reset-link{display:block; text-align:center; margin-top:10px; font-size:12px; color:var(--text-faint); cursor:pointer; background:none; border:none; width:100%; transition:color .2s;}
+  .reset-link:hover{color:var(--text-dim);}
+
+  .mobile-bar{display:none;}
+
+  /* ---------- Cart & payment pages ---------- */
+  .narrow-page{ max-width:920px; margin:0 auto; padding:36px 24px 80px; }
+  .page-title{ font-size:26px; font-weight:600; margin:0 0 6px; }
+  .page-sub{ font-size:13.5px; color:var(--text-dim); margin:0 0 28px; }
+
+  .cart-row{
+    display:flex; align-items:center; gap:16px; padding:16px 0; border-bottom:1px solid var(--line-soft);
+    animation:fadeUp .35s var(--ease) both;
+  }
+  .cart-row .ic{
+    width:48px; height:48px; border-radius:var(--radius-m); background:var(--panel-alt); border:1px solid var(--line-soft);
+    display:flex; align-items:center; justify-content:center; color:var(--copper-bright); flex:none;
+  }
+  .cart-row .ic svg{width:24px;height:24px;}
+  .cart-row .info{flex:1; min-width:0;}
+  .cart-row .cat{font-size:10.5px; color:var(--text-faint); text-transform:uppercase; letter-spacing:0.04em;}
+  .cart-row .nm{font-size:14.5px; font-weight:500; margin-top:2px;}
+  .cart-row .p{font-family:'IBM Plex Mono',monospace; font-size:14px; color:var(--copper-bright); flex:none;}
+  .cart-row .rm{
+    font-size:12px; color:var(--text-faint); background:none; border:none; cursor:pointer; padding:6px; flex:none;
+    transition:color .2s;
+  }
+  .cart-row .rm:hover{color:var(--red);}
+
+  .cart-empty{
+    text-align:center; padding:70px 20px; color:var(--text-dim); border:1px dashed var(--line); border-radius:var(--radius-m);
+  }
+  .cart-empty .big{font-size:15px; color:var(--text); margin-bottom:6px; font-weight:500;}
+
+  .cart-totals{ margin-top:22px; padding-top:18px; border-top:1px solid var(--line); }
+  .cart-totals .row{ display:flex; justify-content:space-between; font-size:13.5px; color:var(--text-dim); padding:5px 0; }
+  .cart-totals .row.grand{ font-size:19px; color:var(--text); font-weight:600; margin-top:6px; }
+  .cart-totals .row.grand .v{ color:var(--copper-bright); font-family:'IBM Plex Mono',monospace; }
+  .cart-actions{ display:flex; gap:12px; margin-top:22px; }
+  .cart-actions .btn-primary{ margin-top:0; }
+
+  .form-grid{ display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:22px; }
+  .form-grid.one{ grid-template-columns:1fr; }
+  .field{ display:flex; flex-direction:column; gap:6px; }
+  .field.span2{ grid-column:1 / -1; }
+  .field label{ font-size:12px; color:var(--text-dim); }
+  .field input{
+    background:var(--panel); border:1px solid var(--line); border-radius:var(--radius-s);
+    padding:11px 12px; color:var(--text); font-family:'Inter',sans-serif; font-size:13.5px;
+    transition:border-color .2s;
+  }
+  .field input:focus{ border-color:var(--copper); outline:none; }
+  .field .err{ font-size:11px; color:var(--red); min-height:14px; }
+  .section-card{
+    background:var(--panel); border:1px solid var(--line-soft); border-radius:var(--radius-m); padding:22px; margin-bottom:20px;
+  }
+  .section-card h3{ font-size:14.5px; margin:0 0 16px; font-weight:600; display:flex; align-items:center; gap:8px; }
+  .section-card h3 .n{
+    width:20px;height:20px; border-radius:50%; background:var(--panel-alt); border:1px solid var(--line);
+    display:inline-flex; align-items:center; justify-content:center; font-size:11px; font-family:'IBM Plex Mono',monospace; color:var(--copper-bright); flex:none;
+  }
+  .demo-note{
+    font-size:11.5px; color:var(--text-faint); background:var(--panel-alt); border:1px solid var(--line-soft);
+    border-radius:var(--radius-s); padding:8px 10px; margin-top:-6px; margin-bottom:18px; line-height:1.5;
   }
 
-  .col { display: flex; flex-direction: column; border-right: 1px solid var(--line); overflow: hidden; }
-  .col:last-child { border-right: none; }
-  
-  .col-header {
-    padding: 1rem;
-    background: var(--panel);
-    border-bottom: 1px solid var(--line);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+  .pay-summary{ background:var(--panel); border:1px solid var(--line-soft); border-radius:var(--radius-m); padding:18px 20px; margin-bottom:22px; }
+  .pay-summary .row{ display:flex; justify-content:space-between; font-size:13px; color:var(--text-dim); padding:4px 0; }
+  .pay-summary .row.grand{ font-size:17px; color:var(--text); font-weight:600; margin-top:8px; padding-top:10px; border-top:1px solid var(--line-soft); }
+  .pay-summary .row.grand .v{ color:var(--copper-bright); font-family:'IBM Plex Mono',monospace; }
+
+  .spinner{
+    width:16px; height:16px; border-radius:50%; border:2px solid rgba(23,19,16,.35); border-top-color:#171310;
+    display:inline-block; animation:spin .7s linear infinite; margin-right:8px; vertical-align:-3px;
   }
-  .col-title { font-family: var(--font-heading); font-size: 1rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
 
-  /* Left Panel: Categories */
-  .category-list { overflow-y: auto; padding: 0.75rem; display: flex; flex-direction: column; gap: 0.5rem; }
-  .cat-card {
-    background: var(--panel);
-    border: 1px solid var(--line);
-    border-radius: 6px;
-    padding: 0.85rem 1rem;
-    cursor: pointer;
-    transition: all 0.15s ease;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+  .confirm-wrap{ text-align:center; padding:50px 20px 20px; }
+  .confirm-icon{
+    width:64px; height:64px; border-radius:50%; background:rgba(123,171,130,0.14); border:1px solid rgba(123,171,130,.4);
+    color:var(--green); display:flex; align-items:center; justify-content:center; margin:0 auto 20px; animation:pop .4s var(--ease);
   }
-  .cat-card:hover { border-color: var(--accent); background: var(--panel-alt); }
-  .cat-card.active { border-color: var(--accent); background: var(--accent-glow); }
-  .cat-info { display: flex; align-items: center; gap: 0.75rem; }
-  .cat-icon { font-size: 1.2rem; width: 24px; text-align: center; }
-  .cat-name { font-weight: 600; font-size: 0.9rem; }
-  .cat-count { font-size: 11px; color: var(--text-dim); font-family: var(--font-mono); }
-  .cat-selection { font-size: 11px; color: var(--accent); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 140px; }
+  .confirm-icon svg{ width:30px; height:30px; }
+  .confirm-order{ font-family:'IBM Plex Mono',monospace; font-size:13px; color:var(--copper-bright); background:var(--panel); border:1px solid var(--line-soft); display:inline-block; padding:8px 16px; border-radius:20px; margin:10px 0 26px; }
 
-  /* Middle Panel: Hardware Store Catalog */
-  .store-panel { display: flex; flex-direction: column; height: 100%; background: #13161c; }
-  .store-controls { padding: 1rem; border-bottom: 1px solid var(--line); display: flex; gap: 0.75rem; background: var(--panel); }
-  .search-input {
-    flex: 1;
-    background: var(--bg);
-    border: 1px solid var(--line);
-    color: var(--text);
-    padding: 0.5rem 0.85rem;
-    border-radius: 4px;
-    font-size: 13px;
-    outline: none;
+  .history-row{
+    display:flex; justify-content:space-between; align-items:center; gap:12px; padding:16px 0; border-bottom:1px solid var(--line-soft);
   }
-  .search-input:focus { border-color: var(--accent); }
-  .filter-toggle {
-    background: var(--panel-alt);
-    border: 1px solid var(--line);
-    color: var(--text);
-    padding: 0.5rem 0.85rem;
-    border-radius: 4px;
-    font-size: 12px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+  .history-row .oid{ font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:var(--copper-bright); }
+  .history-row .meta{ font-size:11.5px; color:var(--text-faint); margin-top:3px; }
+  .history-row .amt{ font-family:'IBM Plex Mono',monospace; font-size:14px; }
+
+  @media (max-width: 1000px){
+    .layout{grid-template-columns:1fr;}
+    .steps{position:static; height:auto; flex-direction:row; overflow-x:auto; padding:14px 16px; gap:6px; border-bottom:1px solid var(--line-soft);}
+    .steps-title{display:none;}
+    .step{flex:none; min-width:150px;}
+    .step.active::before{display:none;}
+    .main{border:none; padding:20px 16px 90px;}
+    .summary{display:none;}
+    .mobile-bar{display:flex; position:fixed; bottom:0; left:0; right:0; z-index:50; background:var(--panel); border-top:1px solid var(--line); padding:12px 16px; align-items:center; justify-content:space-between; gap:12px;}
+    .mobile-bar .l{font-size:11px; color:var(--text-dim);}
+    .mobile-bar .v{font-family:'IBM Plex Mono',monospace; font-size:17px; color:var(--copper-bright);}
+    .mobile-bar button{padding:10px 18px; border:none; border-radius:var(--radius-m); background:var(--copper); color:#171310; font-weight:600; font-family:'Inter',sans-serif;}
+    .topnav-link span.lbl-text{display:none;}
+    .form-grid{grid-template-columns:1fr;}
   }
-  .filter-toggle.active { border-color: var(--ok); color: var(--ok); background: var(--ok-bg); }
 
-  .store-items { overflow-y: auto; padding: 1rem; display: flex; flex-direction: column; gap: 0.75rem; }
-  .item-card {
-    background: var(--panel);
-    border: 1px solid var(--line-soft);
-    border-radius: 6px;
-    padding: 1rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    transition: border 0.15s;
-  }
-  .item-card:hover { border-color: var(--line); }
-  .item-left { display: flex; gap: 1rem; align-items: center; }
-  .item-img { width: 48px; height: 48px; background: var(--bg); border-radius: 4px; border: 1px solid var(--line); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
-  .item-details { display: flex; flex-direction: column; gap: 4px; }
-  .item-title { font-weight: 600; font-size: 0.95rem; }
-  .item-specs { font-size: 12px; color: var(--text-dim); display: flex; gap: 8px; font-family: var(--font-mono); }
-  .item-spec-tag { background: var(--panel-alt); padding: 1px 6px; border-radius: 3px; border: 1px solid var(--line-soft); }
-
-  .item-right { display: flex; align-items: center; gap: 1rem; }
-  .item-price { font-family: var(--font-mono); font-weight: 600; font-size: 1rem; color: var(--text); }
-  .btn-select {
-    background: var(--accent);
-    color: #000;
-    border: none;
-    padding: 0.4rem 0.85rem;
-    border-radius: 4px;
-    font-weight: 600;
-    font-size: 12px;
-    cursor: pointer;
-    transition: opacity 0.15s;
-  }
-  .btn-select:hover { opacity: 0.9; }
-  .btn-select.selected { background: var(--ok); color: #000; }
-
-  /* Right Panel: Build Summary & Checks */
-  .summary-body { overflow-y: auto; padding: 1rem; display: flex; flex-direction: column; gap: 1rem; flex: 1; }
-  .metrics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
-  .metric-card { background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 0.75rem; }
-  .metric-label { font-size: 11px; color: var(--text-dim); font-family: var(--font-mono); margin-bottom: 4px; }
-  .metric-val { font-family: var(--font-heading); font-size: 1.25rem; font-weight: 700; }
-
-  .compat-panel { background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 0.85rem; }
-  .compat-header { font-family: var(--font-heading); font-weight: 600; margin-bottom: 0.5rem; font-size: 0.85rem; text-transform: uppercase; color: var(--text-dim); }
-  .compat-list { display: flex; flex-direction: column; gap: 0.5rem; }
-  .compat-item { font-size: 12px; padding: 0.5rem; border-radius: 4px; display: flex; gap: 0.5rem; align-items: flex-start; }
-  .compat-item.ok { background: var(--ok-bg); color: var(--ok); border: 1px solid rgba(52, 211, 153, 0.2); }
-  .compat-item.warn { background: var(--warn-bg); color: var(--warn); border: 1px solid rgba(251, 113, 133, 0.2); }
-
-  .build-items { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 0.5rem; }
-  .build-item-row { display: flex; justify-content: space-between; font-size: 12px; background: var(--panel-alt); padding: 6px 8px; border-radius: 4px; border: 1px solid var(--line-soft); }
-  .build-item-name { text-overflow: ellipsis; overflow: hidden; white-space: nowrap; max-width: 180px; }
-  .build-item-remove { color: var(--warn); cursor: pointer; margin-left: 6px; }
-
-  .summary-footer { padding: 1rem; border-top: 1px solid var(--line); background: var(--panel); }
-  .btn-export { width: 100%; background: var(--panel-alt); border: 1px solid var(--line); color: var(--text); padding: 0.65rem; border-radius: 4px; font-weight: 600; cursor: pointer; text-align: center; font-size: 13px; }
-  .btn-export:hover { border-color: var(--accent); color: var(--accent); }
+  :focus-visible{outline:2px solid var(--copper-bright); outline-offset:2px;}
+  @media (prefers-reduced-motion: reduce){ *{animation:none !important; transition:none !important;} }
 </style>
 </head>
 <body>
 
-<header>
-  <div class="logo">BUILD<span>RIG</span> <span class="badge">50 ITEMS PER CAT</span></div>
-  <div style="font-size:12px; font-family:var(--font-mono); color:var(--text-dim);">SYSTEM BUILDER v3.0</div>
-</header>
-
-<div class="layout">
-  <!-- Left Column: Category Selection -->
-  <div class="col">
-    <div class="col-header">
-      <span class="col-title">Categories</span>
-    </div>
-    <div class="category-list" id="category-list">
-      <!-- Generated dynamically -->
-    </div>
+<div class="topbar">
+  <div class="brand" data-nav="build">
+    <span class="mark">PC</span>
+    <span class="name">PC Builder<span class="sub">Pick your parts, build it yourself</span></span>
   </div>
-
-  <!-- Middle Column: Product Catalog -->
-  <div class="col store-panel">
-    <div class="store-controls">
-      <input type="text" id="search-input" class="search-input" placeholder="Search parts..." oninput="renderStoreItems()">
-      <button class="filter-toggle" id="filter-compat-btn" onclick="toggleCompatFilter()">
-        ⚡ Compatible Only
-      </button>
-    </div>
-    <div class="store-items" id="store-items">
-      <!-- Generated dynamically -->
-    </div>
+  <div class="topnav">
+    <div class="topnav-link" data-nav="build"><span class="lbl-text">Build</span></div>
+    <div class="topnav-link" data-nav="cart"><span class="lbl-text">Cart</span><span class="badge-count" id="navCartCount" style="display:none;"></span></div>
+    <div class="topnav-link" data-nav="history"><span class="lbl-text">Order History</span></div>
   </div>
-
-  <!-- Right Column: Specs & Validation -->
-  <div class="col">
-    <div class="col-header">
-      <span class="col-title">System Specs</span>
-    </div>
-    <div class="summary-body">
-      <div class="metrics-grid">
-        <div class="metric-card">
-          <div class="metric-label">TOTAL PRICE</div>
-          <div class="metric-val" id="total-price">$0</div>
-        </div>
-        <div class="metric-card">
-          <div class="metric-label">EST. WATTAGE</div>
-          <div class="metric-val" id="total-wattage" style="color:var(--accent);">0W</div>
-        </div>
-      </div>
-
-      <div class="compat-panel">
-        <div class="compat-header">Compatibility Checks</div>
-        <div class="compat-list" id="compat-list">
-          <!-- Live Checks -->
-        </div>
-      </div>
-
-      <div class="compat-panel" style="flex:1;">
-        <div class="compat-header">Selected Parts</div>
-        <div class="build-items" id="build-items">
-          <!-- Active Selections -->
-        </div>
-      </div>
-    </div>
-    <div class="summary-footer">
-      <button class="btn-export" onclick="exportBuild()">Export Configuration</button>
-    </div>
+  <div class="topbar-total">
+    <span class="lbl">Total</span>
+    <span class="amt mono" id="topTotal">$0</span>
   </div>
 </div>
 
+<!-- ============ PAGE: BUILD ============ -->
+<section class="page" id="page-build">
+  <div class="layout">
+    <nav class="steps" id="steps"></nav>
+
+    <main class="main">
+      <div class="main-head">
+        <h2 id="catTitle">CPU</h2>
+        <span class="count mono" id="catCount"></span>
+      </div>
+      <p class="main-note" id="catNote"></p>
+      <div id="compatFlag"></div>
+      <div class="grid" id="grid"></div>
+    </main>
+
+    <aside class="summary">
+      <h3>Your Build</h3>
+      <div class="sub" id="progressLabel">No parts selected yet</div>
+      <div class="summary-list" id="summaryList"></div>
+      <div class="power-est">
+        <span>Estimated power draw</span>
+        <span class="v mono" id="powerEst">— W</span>
+      </div>
+      <div class="summary-total">
+        <div class="row"><span class="l">Total</span><span class="v" id="sideTotal">$0</span></div>
+        <button class="btn-primary" id="goCartBtn" disabled>Go to Cart</button>
+        <button class="reset-link" id="resetBtn">Clear all selections</button>
+      </div>
+    </aside>
+  </div>
+
+  <div class="mobile-bar">
+    <div><div class="l">Total</div><div class="v" id="mobTotal">$0</div></div>
+    <button id="mobCheckout" disabled>Go to Cart</button>
+  </div>
+</section>
+
+<!-- ============ PAGE: CART ============ -->
+<section class="page narrow-page" id="page-cart">
+  <h1 class="page-title">Your Cart</h1>
+  <p class="page-sub">Review your selected parts before checking out</p>
+  <div id="cartList"></div>
+  <div id="cartTotalsWrap"></div>
+</section>
+
+<!-- ============ PAGE: CHECKOUT / PAYMENT ============ -->
+<section class="page narrow-page" id="page-checkout">
+  <h1 class="page-title">Checkout</h1>
+  <p class="page-sub">Enter your shipping and payment details to confirm your order</p>
+
+  <div class="pay-summary" id="paySummary"></div>
+
+  <form id="checkoutForm">
+    <div class="section-card">
+      <h3><span class="n">1</span>Shipping Information</h3>
+      <div class="form-grid">
+        <div class="field"><label>Full name</label><input type="text" id="f_name" required><span class="err"></span></div>
+        <div class="field"><label>Phone number</label><input type="tel" id="f_phone" required><span class="err"></span></div>
+        <div class="field span2"><label>Shipping address</label><input type="text" id="f_address" required><span class="err"></span></div>
+        <div class="field"><label>Email</label><input type="email" id="f_email" required><span class="err"></span></div>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <h3><span class="n">2</span>Payment Details</h3>
+      <div class="demo-note">Demo mode — no card data is sent to any real payment provider. For testing the flow only.</div>
+      <div class="form-grid">
+        <div class="field span2"><label>Card number</label><input type="text" id="f_card" placeholder="0000 0000 0000 0000" maxlength="19" required><span class="err"></span></div>
+        <div class="field"><label>Expiry (MM/YY)</label><input type="text" id="f_exp" placeholder="MM/YY" maxlength="5" required><span class="err"></span></div>
+        <div class="field"><label>CVC</label><input type="text" id="f_cvc" placeholder="123" maxlength="4" required><span class="err"></span></div>
+      </div>
+    </div>
+
+    <button type="submit" class="btn-primary" id="payBtn">Confirm Payment</button>
+    <button type="button" class="btn-ghost" style="margin-top:10px;" data-nav="cart">Back to cart</button>
+  </form>
+</section>
+
+<!-- ============ PAGE: CONFIRMATION ============ -->
+<section class="page narrow-page" id="page-confirm">
+  <div class="confirm-wrap">
+    <div class="confirm-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg></div>
+    <h1 class="page-title">Order Confirmed</h1>
+    <p class="page-sub">Thanks for your order. We'll get your parts ready and follow up to confirm shipping.</p>
+    <div class="confirm-order mono" id="confirmOrderId"></div>
+  </div>
+  <div class="section-card" id="confirmSummary"></div>
+  <button class="btn-primary" data-nav="build">Start a New Build</button>
+</section>
+
+<!-- ============ PAGE: ORDER HISTORY ============ -->
+<section class="page narrow-page" id="page-history">
+  <h1 class="page-title">Order History</h1>
+  <p class="page-sub">All orders saved on this device</p>
+  <div id="historyList"></div>
+</section>
+
 <script>
-// Base Templates for Procedurally Generating 50 Realistic Products Per Category
-const RAW_TEMPLATES = {
-  cpu: [
-    // AM5 Sockets
-    { n: "AMD Ryzen 9 9950X", p: 649, w: 170, s: "AM5", tags: ["16-Core", "4.3GHz Base"] },
-    { n: "AMD Ryzen 9 7950X3D", p: 629, w: 120, s: "AM5", tags: ["3D V-Cache", "Gaming Master"] },
-    { n: "AMD Ryzen 9 7900X", p: 389, w: 170, s: "AM5", tags: ["12-Core", "4.7GHz"] },
-    { n: "AMD Ryzen 7 9800X3D", p: 479, w: 120, s: "AM5", tags: ["Top Gaming CPU", "104MB Cache"] },
-    { n: "AMD Ryzen 7 7800X3D", p: 449, w: 120, s: "AM5", tags: ["Flagship Gaming", "8-Core"] },
-    { n: "AMD Ryzen 7 9700X", p: 329, w: 65, s: "AM5", tags: ["Efficiency King", "8-Core"] },
-    { n: "AMD Ryzen 5 9600X", p: 249, w: 65, s: "AM5", tags: ["Best Value Gen5", "6-Core"] },
-    { n: "AMD Ryzen 5 7600X", p: 199, w: 105, s: "AM5", tags: ["Mid-Range Mainstay"] },
-    { n: "AMD Ryzen 5 7600", p: 185, w: 65, s: "AM5", tags: ["Includes Cooler", "Entry AM5"] },
-    // LGA1851 Sockets (Intel Core Ultra)
-    { n: "Intel Core Ultra 9 285K", p: 589, w: 125, s: "LGA1851", tags: ["24-Core", "Arrow Lake"] },
-    { n: "Intel Core Ultra 7 265K", p: 399, w: 125, s: "LGA1851", tags: ["20-Core", "Arrow Lake"] },
-    { n: "Intel Core Ultra 7 265KF", p: 384, w: 125, s: "LGA1851", tags: ["No iGPU", "20-Core"] },
-    { n: "Intel Core Ultra 5 245K", p: 309, w: 125, s: "LGA1851", tags: ["14-Core", "Arrow Lake"] },
-    { n: "Intel Core Ultra 5 245KF", p: 294, w: 125, s: "LGA1851", tags: ["Value Performance"] },
-    // LGA1700 Sockets (13th & 14th Gen)
-    { n: "Intel Core i9-14900KS", p: 689, w: 150, s: "LGA1700", tags: ["6.2GHz Extreme"] },
-    { n: "Intel Core i9-14900K", p: 549, w: 125, s: "LGA1700", tags: ["24-Core", "5.8GHz"] },
-    { n: "Intel Core i7-14700K", p: 389, w: 125, s: "LGA1700", tags: ["20-Core", "Great Value"] },
-    { n: "Intel Core i5-14600K", p: 299, w: 125, s: "LGA1700", tags: ["14-Core", "Sweetspot"] },
-    { n: "Intel Core i5-13400F", p: 165, w: 65, s: "LGA1700", tags: ["Budget Favorite"] },
-    // AM4 Sockets
-    { n: "AMD Ryzen 7 5700X3D", p: 199, w: 105, s: "AM4", tags: ["Budget Gaming Champ"] },
-    { n: "AMD Ryzen 5 5600X", p: 135, w: 65, s: "AM4", tags: ["Classic Value"] },
-  ],
-  board: [
-    // AM5 Boards
-    { n: "ASUS ROG Crosshair X870E Hero", p: 699, s: "AM5", r: "DDR5", tags: ["PCIe 5.0", "Wi-Fi 7"] },
-    { n: "MSI MPG X870E Carbon WiFi", p: 499, s: "AM5", r: "DDR5", tags: ["5G LAN", "EZ M.2"] },
-    { n: "Gigabyte X870 AORUS Elite AX", p: 289, s: "AM5", r: "DDR5", tags: ["ATX", "Wi-Fi 7"] },
-    { n: "ASRock B650 Steel Legend WiFi", p: 199, s: "AM5", r: "DDR5", tags: ["White PCB", "PCIe 5.0 M.2"] },
-    { n: "MSI MAG B650 Tomahawk WiFi", p: 189, s: "AM5", r: "DDR5", tags: ["Best Seller", "Robust VRM"] },
-    { n: "ASUS TUF Gaming B650-Plus WiFi", p: 179, s: "AM5", r: "DDR5", tags: ["TUF Durable"] },
-    { n: "ASRock B650M Pro RS WiFi", p: 139, s: "AM5", r: "DDR5", tags: ["Micro-ATX", "Budget AM5"] },
-    // LGA1851 Boards
-    { n: "ASUS ROG Maximus Z890 Hero", p: 679, s: "LGA1851", r: "DDR5", tags: ["Thunderbolt 5", "Wi-Fi 7"] },
-    { n: "MSI MEG Z890 ACE", p: 650, s: "LGA1851", r: "DDR5", tags: ["Flagship Intel"] },
-    { n: "Gigabyte Z890 AORUS Master", p: 549, s: "LGA1851", r: "DDR5", tags: ["10G LAN", "Robust Power"] },
-    { n: "ASUS TUF Gaming Z890-PRO WiFi", p: 319, s: "LGA1851", r: "DDR5", tags: ["PCIe 5.0", "ATX"] },
-    { n: "MSI MAG Z890 Tomahawk WiFi", p: 299, s: "LGA1851", r: "DDR5", tags: ["Arrow Lake Ready"] },
-    // LGA1700 Boards
-    { n: "ASUS ROG Strix Z790-E Gaming WiFi II", p: 429, s: "LGA1700", r: "DDR5", tags: ["Wi-Fi 7", "PCIe 5.0"] },
-    { n: "MSI PRO Z790-A MAX WiFi", p: 239, s: "LGA1700", r: "DDR5", tags: ["Clean Black Look"] },
-    { n: "Gigabyte B760 AORUS Elite AX", p: 169, s: "LGA1700", r: "DDR5", tags: ["Great Value ATX"] },
-    { n: "ASRock B760M Steel Legend WiFi", p: 149, s: "LGA1700", r: "DDR5", tags: ["mATX", "DDR5"] },
-    // AM4 Boards
-    { n: "MSI MAG B550 Tomahawk", p: 159, s: "AM4", r: "DDR4", tags: ["PCIe 4.0", "AM4 Classic"] },
-    { n: "ASUS TUF Gaming B550-Plus", p: 139, s: "AM4", r: "DDR4", tags: ["ATX", "DDR4 Support"] },
-    { n: "ASRock B550M Pro4", p: 99, s: "AM4", r: "DDR4", tags: ["Budget Master"] }
-  ],
-  ram: [
-    { n: "G.Skill Trident Z5 RGB 32GB (2x16GB) 6000MHz", p: 124, r: "DDR5", tags: ["CL30", "Expo & XMP"] },
-    { n: "Corsair Vengeance RGB 32GB (2x16GB) 6000MHz", p: 119, r: "DDR5", tags: ["CL30", "iCUE Control"] },
-    { n: "TeamGroup T-Force Delta RGB 32GB 6000MHz", p: 104, r: "DDR5", tags: ["CL30", "High Speed"] },
-    { n: "G.Skill Flare X5 32GB (2x16GB) 6000MHz", p: 99, r: "DDR5", tags: ["Low Profile", "AMD Optimized"] },
-    { n: "Crucial Pro 64GB (2x32GB) 5600MHz", p: 179, r: "DDR5", tags: ["Stealth Black", "Workstation"] },
-    { n: "Corsair Dominator Titanium 64GB (2x32GB) 6600MHz", p: 309, r: "DDR5", tags: ["Ultra Premium"] },
-    { n: "G.Skill Trident Z5 RGB 64GB (2x32GB) 6400MHz", p: 239, r: "DDR5", tags: ["CL32 High Capacity"] },
-    { n: "Corsair Vengeance LPX 32GB (2x16GB) 3600MHz", p: 69, r: "DDR4", tags: ["DDR4", "CL18"] },
-    { n: "G.Skill Ripjaws V 32GB (2x16GB) 3600MHz", p: 64, r: "DDR4", tags: ["DDR4", "Classic"] },
-    { n: "TeamGroup T-Force Vulcan 16GB (2x8GB) 3200MHz", p: 36, r: "DDR4", tags: ["Budget DDR4"] }
-  ],
-  gpu: [
-    { n: "NVIDIA GeForce RTX 5090", p: 1999, w: 600, tags: ["32GB GDDR7", "Ultimate Beast"] },
-    { n: "NVIDIA GeForce RTX 5080", p: 1199, w: 400, tags: ["16GB GDDR7", "Next-Gen Flagship"] },
-    { n: "ASUS ROG Strix RTX 4090 OC", p: 1999, w: 450, tags: ["24GB GDDR6X", "Top Tier 4K"] },
-    { n: "MSI Gaming X Slim RTX 4080 SUPER", p: 1049, w: 320, tags: ["16GB GDDR6X", "4K Gaming"] },
-    { n: "Gigabyte WINDFORCE RTX 4070 Ti SUPER", p: 799, w: 285, tags: ["16GB VRAM", "1440p High FPS"] },
-    { n: "ASUS TUF Gaming RTX 4070 SUPER", p: 599, w: 220, tags: ["12GB GDDR6X", "Sweetspot GPU"] },
-    { n: "MSI Ventus 2X RTX 4060 Ti 8GB", p: 379, w: 160, tags: ["1080p Ultra", "DLSS 3"] },
-    { n: "Gigabyte RTX 4060 EAGLE OC 8GB", p: 299, w: 115, tags: ["Low Power", "Entry RTX"] },
-    { n: "Sapphire NITRO+ Radeon RX 7900 XTX", p: 999, w: 355, tags: ["24GB VRAM", "AMD Flagship"] },
-    { n: "PowerColor Red Devil RX 7900 XT", p: 699, w: 315, tags: ["20GB VRAM", "4K Beast"] },
-    { n: "XFX Speedster RX 7800 XT 16GB", p: 489, w: 263, tags: ["16GB VRAM", "1440p King"] },
-    { n: "ASRock Challenger RX 7700 XT 12GB", p: 389, w: 245, tags: ["Solid 1440p"] },
-    { n: "Sapphire PULSE Radeon RX 6600 8GB", p: 199, w: 132, tags: ["Best Budget GPU"] }
-  ],
-  storage: [
-    { n: "Samsung 990 PRO 2TB NVMe SSD", p: 169, tags: ["7450 MB/s", "PCIe 4.0"] },
-    { n: "Samsung 990 PRO 4TB NVMe SSD", p: 329, tags: ["Huge Capacity", "PCIe 4.0"] },
-    { n: "WD_BLACK SN850X 2TB NVMe SSD", p: 154, tags: ["7300 MB/s", "Gaming SSD"] },
-    { n: "Crucial T700 2TB Gen5 NVMe SSD", p: 279, tags: ["12400 MB/s", "PCIe 5.0 Extreme"] },
-    { n: "Crucial T500 1TB Gen4 NVMe SSD", p: 89, tags: ["7300 MB/s", "PS5 Ready"] },
-    { n: "Kingston KC3000 2TB PCIe 4.0", p: 145, tags: ["7000 MB/s", "Reliable"] },
-    { n: "TeamGroup MP44L 1TB M.2 NVMe", p: 56, tags: ["Budget Gen4"] },
-    { n: "Crucial P3 Plus 2TB M.2 NVMe", p: 112, tags: ["PCIe 4.0 Value"] },
-    { n: "Seagate Barracuda 4TB HDD", p: 84, tags: ["3.5-inch", "Mass Storage"] }
-  ],
-  psu: [
-    { n: "Corsair RM1000x Shift 1000W 80+ Gold", p: 209, w: 1000, tags: ["Fully Modular", "ATX 3.0"] },
-    { n: "Seasonic VERTEX GX-1200W 80+ Gold", p: 259, w: 1200, tags: ["ATX 3.0", "PCIe 5.0 Ready"] },
-    { n: "be quiet! Dark Power 13 1000W 80+ Titanium", p: 289, w: 1000, tags: ["Titanium Efficiency"] },
-    { n: "Corsair RM850x 850W 80+ Gold", p: 129, w: 850, tags: ["Top Rated", "Quiet Fan"] },
-    { n: "MSI MAG A850GL 850W 80+ Gold", p: 109, w: 850, tags: ["PCIe 5.0 Ready", "Compact"] },
-    { n: "Thermaltake Toughpower GF3 750W", p: 89, w: 750, tags: ["ATX 3.0", "80+ Gold"] },
-    { n: "EVGA SuperNOVA 650 GT 80+ Gold", p: 79, w: 650, tags: ["Compact ATX", "Auto Eco"] },
-    { n: "Corsair CX650M 650W 80+ Bronze", p: 64, w: 650, tags: ["Semi-Modular", "Budget"] }
-  ],
-  case: [
-    { n: "Lian Li O11 Vision Dual-Chamber", p: 139, tags: ["3-Side Glass", "ATX"] },
-    { n: "NZXT H9 Flow Dual-Chamber", p: 159, tags: ["High Airflow", "Panoramic Glass"] },
-    { n: "Corsair 4000D Airflow ATX Mid-Tower", p: 89, tags: ["Best Seller", "Clean Cable Mgt"] },
-    { n: "Fractal Design North Mid-Tower", p: 139, tags: ["Real Wood Front", "Scandinavian"] },
-    { n: "Lian Li LANCOOL 216 Mesh", p: 99, tags: ["2x 160mm Fans", "Airflow Beast"] },
-    { n: "NZXT H6 Flow RGB Compact Mid-Tower", p: 124, tags: ["Dual-Chamber", "Includes RGB Fans"] },
-    { n: "Montech AIR 903 MAX", p: 75, tags: ["4x 140mm ARGB Fans", "Best Value Case"] },
-    { n: "Fractal Design Pop Air RGB", p: 89, tags: ["Mesh Front", "Fun Colors"] }
-  ],
-  cooler: [
-    { n: "Arctic Liquid Freezer III 360 ARGB", p: 110, w: 15, tags: ["Best AIO Performance", "VRM Fan"] },
-    { n: "NZXT Kraken Elite 360 RGB AIO", p: 299, w: 15, tags: ["LCD Display", "Custom GIF"] },
-    { n: "Corsair iCUE LINK H150i LCD 360mm", p: 289, w: 15, tags: ["Single-Cable System"] },
-    { n: "Thermalright Peerless Assassin 120 SE", p: 34, w: 5, tags: ["Giant Killer Air Cooler"] },
-    { n: "Thermalright Phantom Spirit 120 EVO", p: 49, w: 5, tags: ["Top Air Cooler", "Quiet Fans"] },
-    { n: "Noctua NH-D15 chromax.black", p: 119, w: 5, tags: ["Dual Tower", "Legendary Silent"] },
-    { n: "DeepCool AK620 Digital", p: 79, w: 5, tags: ["Real-time Temp Display"] },
-    { n: "NZXT Kraken 240mm Liquid Cooler", p: 139, w: 10, tags: ["Compact 240 AIO"] }
-  ]
+const ICONS = {
+  cpu: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="6" y="6" width="12" height="12" rx="1"/><rect x="9" y="9" width="6" height="6" rx="0.5"/><path d="M9 2v3M12 2v3M15 2v3M9 19v3M12 19v3M15 19v3M2 9h3M2 12h3M2 15h3M19 9h3M19 12h3M19 15h3"/></svg>`,
+  board: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="1"/><rect x="6" y="6" width="5" height="5"/><path d="M14 6h4M14 9h4M6 14h3v4H6zM13 13h5v5h-5z"/></svg>`,
+  gpu: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2" y="7" width="20" height="10" rx="1.5"/><circle cx="7" cy="12" r="2.2"/><circle cx="13" cy="12" r="2.2"/><path d="M18 9v6M2 17v2h6v-2"/></svg>`,
+  ram: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="7" width="18" height="10" rx="1"/><path d="M7 7v3M11 7v3M15 7v3M19 7v3M7 17v2M17 17v2"/></svg>`,
+  storage: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4" y="4" width="16" height="16" rx="1.5"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r="0.7" fill="currentColor"/></svg>`,
+  psu: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="5" width="18" height="14" rx="1.5"/><circle cx="9" cy="12" r="3"/><path d="M15 9h3M15 12h3M15 15h3"/></svg>`,
+  case: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="6" y="2" width="12" height="20" rx="1.5"/><circle cx="12" cy="6" r="1"/><path d="M9 10h6M9 13h6M9 16h6"/></svg>`,
+  cooler: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="8"/><path d="M12 4c1.5 2 1.5 4 0 4s-1.5-2 0-4M12 20c1.5-2 1.5-4 0-4s-1.5 2 0 4M4 12c2-1.5 4-1.5 4 0s-2 1.5-4 0M20 12c-2-1.5-4-1.5-4 0s2 1.5 4 0"/><circle cx="12" cy="12" r="1.4" fill="currentColor"/></svg>`,
 };
 
-// Auto-Expander: Generates exactly 50 realistic items per category using brand & model variants
-function generate50PerCategory() {
-  const categories = {};
-  const brands = ["ASUS", "MSI", "Gigabyte", "Corsair", "G.Skill", "Thermaltake", "DeepCool", "ASRock", "Zotac", "XFX"];
-  
-  Object.keys(RAW_TEMPLATES).forEach(catKey => {
-    const rawList = RAW_TEMPLATES[catKey];
-    const full50List = [];
-    let idCount = 1;
-
-    // First push the authentic bases
-    rawList.forEach(item => {
-      full50List.push({ ...item, id: `${catKey}_${idCount++}` });
-    });
-
-    // Expand remaining to reach exactly 50 items per category
-    let brandIdx = 0;
-    while (full50List.length < 50) {
-      const baseItem = rawList[full50List.length % rawList.length];
-      const brand = brands[brandIdx % brands.length];
-      const priceOffset = (full50List.length % 7) * 5 - 15;
-      
-      const newName = `${brand} ${baseItem.n.replace(/(ASUS|MSI|Gigabyte|G\.Skill|Corsair|Sapphire|PowerColor|XFX|ASRock)\s*/g, '')} Edition ${Math.floor(full50List.length / rawList.length) + 1}`;
-      
-      const newItem = {
-        ...baseItem,
-        id: `${catKey}_${idCount++}`,
-        n: newName,
-        p: Math.max(25, baseItem.p + priceOffset),
-      };
-      full50List.push(newItem);
-      brandIdx++;
-    }
-
-    categories[catKey] = full50List;
-  });
-
-  return categories;
-}
+const HUES = {
+  cpu:    ['rgba(208,138,76,.35)','rgba(123,171,130,.10)'],
+  board:  ['rgba(96,140,196,.30)','rgba(208,138,76,.10)'],
+  gpu:    ['rgba(123,171,130,.32)','rgba(96,140,196,.10)'],
+  ram:    ['rgba(196,120,196,.28)','rgba(208,138,76,.10)'],
+  storage:['rgba(96,196,190,.28)','rgba(123,171,130,.10)'],
+  psu:    ['rgba(201,106,92,.28)','rgba(208,138,76,.10)'],
+  case:   ['rgba(150,150,170,.28)','rgba(96,140,196,.10)'],
+  cooler: ['rgba(120,190,220,.30)','rgba(123,171,130,.10)'],
+};
 
 const CATEGORY_DEFS = [
-  { id: 'cpu', name: 'Processor (CPU)', icon: '💻' },
-  { id: 'board', name: 'Motherboard', icon: '🔌' },
-  { id: 'ram', name: 'Memory (RAM)', icon: '⚡' },
-  { id: 'gpu', name: 'Graphics Card', icon: '🎮' },
-  { id: 'storage', name: 'Storage (SSD/HDD)', icon: '💾', multi: true },
-  { id: 'psu', name: 'Power Supply (PSU)', icon: '⚡' },
-  { id: 'case', name: 'PC Case', icon: '📦' },
-  { id: 'cooler', name: 'CPU Cooler', icon: '❄️' }
+  { id:'cpu', name:'CPU', en:'Processor', icon:'cpu',
+    note:'The brain of the machine. Pick this first — it decides which motherboard socket you need.',
+    items:[
+      { name:'AMD Ryzen 5 7600', tag:'AM5 · 6C/12T', price:199, power:65, specs:{'Socket':'AM5','Cores/Threads':'6/12','Boost':'5.1GHz'}, socket:'AM5', tier:2 },
+      { name:'AMD Ryzen 5 7600X', tag:'AM5 · 6C/12T', price:219, power:105, specs:{'Socket':'AM5','Cores/Threads':'6/12','Boost':'5.3GHz'}, socket:'AM5', tier:3 },
+      { name:'AMD Ryzen 5 9600X', tag:'AM5 · 6C/12T', price:279, power:65, specs:{'Socket':'AM5','Cores/Threads':'6/12','Boost':'5.4GHz'}, socket:'AM5', tier:3, featured:true },
+      { name:'AMD Ryzen 7 7800X3D', tag:'AM5 · 8C/16T', price:399, power:120, specs:{'Socket':'AM5','Cores/Threads':'8/16','3D Cache':'Yes'}, socket:'AM5', tier:4, featured:true },
+      { name:'AMD Ryzen 7 9800X3D', tag:'AM5 · 8C/16T', price:479, power:120, specs:{'Socket':'AM5','Cores/Threads':'8/16','3D Cache':'Yes'}, socket:'AM5', tier:5 },
+      { name:'AMD Ryzen 9 7950X3D', tag:'AM5 · 16C/32T', price:599, power:120, specs:{'Socket':'AM5','Cores/Threads':'16/32','Boost':'5.7GHz'}, socket:'AM5', tier:6 },
+      { name:'Intel Core i3-14100F', tag:'LGA1700 · 4C/8T', price:109, power:58, specs:{'Socket':'LGA1700','Cores/Threads':'4/8','Boost':'4.7GHz'}, socket:'LGA1700', tier:1 },
+      { name:'Intel Core i5-14400F', tag:'LGA1700 · 10C/16T', price:199, power:65, specs:{'Socket':'LGA1700','Cores/Threads':'10/16','Boost':'4.7GHz'}, socket:'LGA1700', tier:2 },
+      { name:'Intel Core i5-14600KF', tag:'LGA1700 · 14C/20T', price:269, power:125, specs:{'Socket':'LGA1700','Cores/Threads':'14/20','Boost':'5.3GHz'}, socket:'LGA1700', tier:3 },
+      { name:'Intel Core i7-14700K', tag:'LGA1700 · 20C/28T', price:399, power:125, specs:{'Socket':'LGA1700','Cores/Threads':'20/28','Boost':'5.6GHz'}, socket:'LGA1700', tier:4 },
+      { name:'Intel Core i9-14900KS', tag:'LGA1700 · 24C/32T', price:689, power:150, specs:{'Socket':'LGA1700','Cores/Threads':'24/32','Boost':'6.2GHz'}, socket:'LGA1700', tier:6 }
+    ]},
+  { id:'board', name:'Motherboard', en:'Motherboard', icon:'board',
+    note:'Must match the socket of the CPU you selected.',
+    items:[
+      { name:'ASRock B650M-HDV/M.2', tag:'AM5 · mATX', price:99, specs:{'Socket':'AM5','Memory':'DDR5','Form factor':'mATX'}, socket:'AM5' },
+      { name:'MSI PRO B650-P WIFI', tag:'AM5 · ATX', price:139, specs:{'Socket':'AM5','Memory':'DDR5','Wi-Fi':'Yes'}, socket:'AM5' },
+      { name:'Gigabyte B650 AORUS Elite AX', tag:'AM5 · ATX', price:189, specs:{'Socket':'AM5','Memory':'DDR5','Wi-Fi':'Yes'}, socket:'AM5', featured:true },
+      { name:'ASUS ROG STRIX B650E-F', tag:'AM5 · ATX', price:269, specs:{'Socket':'AM5','Memory':'DDR5','PCIe':'5.0'}, socket:'AM5' },
+      { name:'ASUS ROG CROSSHAIR X670E HERO', tag:'AM5 · ATX', price:649, specs:{'Socket':'AM5','Memory':'DDR5','Premium':'Yes'}, socket:'AM5' },
+      { name:'ASRock H610M-HVS', tag:'LGA1700 · mATX', price:79, specs:{'Socket':'LGA1700','Memory':'DDR4','Form factor':'mATX'}, socket:'LGA1700' },
+      { name:'MSI PRO B760M-A WIFI DDR4', tag:'LGA1700 · mATX', price:129, specs:{'Socket':'LGA1700','Memory':'DDR4','Wi-Fi':'Yes'}, socket:'LGA1700' },
+      { name:'Gigabyte B760 AORUS ELITE AX', tag:'LGA1700 · ATX', price:169, specs:{'Socket':'LGA1700','Memory':'DDR5','Wi-Fi':'Yes'}, socket:'LGA1700', featured:true },
+      { name:'MSI MAG Z790 TOMAHAWK WIFI', tag:'LGA1700 · ATX', price:239, specs:{'Socket':'LGA1700','Memory':'DDR5','Overclocking':'Yes'}, socket:'LGA1700' },
+      { name:'ASUS ROG MAXIMUS Z790 DARK HERO', tag:'LGA1700 · ATX', price:699, specs:{'Socket':'LGA1700','Memory':'DDR5','Premium':'Yes'}, socket:'LGA1700' }
+    ]},
+  { id:'ram', name:'Memory', en:'Memory', icon:'ram',
+    note:'Dual-channel (2 sticks or more) is recommended for best performance.',
+    items:[
+      { name:'Crucial 16GB (8x2)', tag:'DDR4 · 3200MHz', price:32, specs:{'Type':'DDR4','Capacity':'16GB','Speed':'3200MHz'}, ram:'DDR4' },
+      { name:'Corsair Vengeance LPX 32GB (16x2)', tag:'DDR4 · 3600MHz', price:75, specs:{'Type':'DDR4','Capacity':'32GB','Speed':'3600MHz'}, ram:'DDR4' },
+      { name:'Crucial Pro 32GB (16x2)', tag:'DDR5 · 5600MHz', price:85, specs:{'Type':'DDR5','Capacity':'32GB','Speed':'5600MHz'}, ram:'DDR5' },
+      { name:'G.Skill Flare X5 32GB (16x2)', tag:'DDR5 · 6000MHz CL30', price:105, specs:{'Type':'DDR5','Capacity':'32GB','Speed':'6000MHz'}, ram:'DDR5', featured:true },
+      { name:'Corsair Vengeance RGB 32GB (16x2)', tag:'DDR5 · 6000MHz', price:119, specs:{'Type':'DDR5','Capacity':'32GB','RGB':'Yes'}, ram:'DDR5' },
+      { name:'G.Skill Trident Z5 RGB 64GB (32x2)', tag:'DDR5 · 6400MHz', price:215, specs:{'Type':'DDR5','Capacity':'64GB','Speed':'6400MHz'}, ram:'DDR5' },
+      { name:'Corsair Dominator Titanium 64GB', tag:'DDR5 · 7200MHz', price:339, specs:{'Type':'DDR5','Capacity':'64GB','Premium':'Yes'}, ram:'DDR5' },
+      { name:'G.Skill Trident Z5 96GB (48x2)', tag:'DDR5 · 6800MHz', price:399, specs:{'Type':'DDR5','Capacity':'96GB','Workstation':'Yes'}, ram:'DDR5' }
+    ]},
+  { id:'gpu', name:'Graphics Card', en:'GPU', icon:'gpu',
+    note:'The biggest factor in gaming frame rate. Pick based on the resolution you play at.',
+    items:[
+      { name:'Radeon RX 6600 8GB', tag:'Budget 1080p', price:199, power:132, specs:{'VRAM':'8GB','Best for':'1080p'} },
+      { name:'Radeon RX 7600 8GB', tag:'Modern 1080p', price:259, power:165, specs:{'VRAM':'8GB','Best for':'1080p'} },
+      { name:'RTX 4060 8GB', tag:'Smooth 1080p', price:289, power:115, specs:{'VRAM':'8GB','Features':'DLSS 3'} },
+      { name:'Radeon RX 7700 XT 12GB', tag:'High FPS 1080p', price:419, power:245, specs:{'VRAM':'12GB','Best for':'1080p–1440p'} },
+      { name:'RTX 4060 Ti 8GB', tag:'1080p–1440p', price:399, power:160, specs:{'VRAM':'8GB','Best for':'1080–1440p'}, featured:true },
+      { name:'Radeon RX 7800 XT 16GB', tag:'Great 1440p', price:499, power:263, specs:{'VRAM':'16GB','Best for':'1440p'} },
+      { name:'RTX 4070 SUPER 12GB', tag:'Comfortable 1440p', price:599, power:220, specs:{'VRAM':'12GB','Best for':'1440p'} },
+      { name:'Radeon RX 7900 XT 20GB', tag:'1440p–4K', price:739, power:315, specs:{'VRAM':'20GB','Best for':'4K Gaming'} },
+      { name:'RTX 4070 Ti SUPER 16GB', tag:'1440p–4K', price:799, power:285, specs:{'VRAM':'16GB','Best for':'1440–4K'}, featured:true },
+      { name:'Radeon RX 7900 XTX 24GB', tag:'High-End 4K', price:949, power:355, specs:{'VRAM':'24GB','Best for':'4K Gaming'} },
+      { name:'RTX 4080 SUPER 16GB', tag:'Premium 4K', price:999, power:320, specs:{'VRAM':'16GB','Best for':'4K Gaming'} },
+      { name:'RTX 4090 24GB', tag:'Uncompromised 4K', price:1799, power:450, specs:{'VRAM':'24GB','Best for':'8K / AI workloads'} }
+    ]},
+  { id:'storage', name:'Storage', en:'Storage', icon:'storage',
+    note:'You can pick more than one — e.g. a fast SSD for boot plus an HDD for bulk storage.',
+    multi:true,
+    items:[
+      { name:'Kingston A400 480GB SATA', tag:'Budget Boot Drive', price:29, specs:{'Capacity':'480GB','Interface':'SATA SSD'} },
+      { name:'Crucial P3 500GB NVMe', tag:'~3,500MB/s read', price:39, specs:{'Capacity':'500GB','Interface':'NVMe Gen3'} },
+      { name:'WD Blue SN580 1TB NVMe', tag:'~4,150MB/s read', price:64, specs:{'Capacity':'1TB','Interface':'NVMe Gen4'} },
+      { name:'Samsung 990 EVO 1TB', tag:'~5,000MB/s read', price:85, specs:{'Capacity':'1TB','Interface':'NVMe Gen4/5'} },
+      { name:'WD Black SN850X 2TB', tag:'~7,300MB/s read', price:149, specs:{'Capacity':'2TB','Interface':'NVMe Gen4'}, featured:true },
+      { name:'Samsung 990 PRO 2TB', tag:'~7,450MB/s read', price:169, specs:{'Capacity':'2TB','Interface':'NVMe Gen4'} },
+      { name:'Crucial T700 2TB NVMe Gen5', tag:'~12,400MB/s read', price:279, specs:{'Capacity':'2TB','Interface':'NVMe Gen5'} },
+      { name:'Samsung 990 PRO 4TB', tag:'~7,450MB/s read', price:319, specs:{'Capacity':'4TB','Interface':'NVMe Gen4'} },
+      { name:'Seagate Barracuda 2TB HDD', tag:'Bulk storage', price:55, specs:{'Capacity':'2TB','Spin speed':'7200RPM'} },
+      { name:'Toshiba X300 8TB HDD', tag:'Massive bulk storage', price:145, specs:{'Capacity':'8TB','Spin speed':'7200RPM'} }
+    ]},
+  { id:'psu', name:'Power Supply', en:'PSU', icon:'psu',
+    note:'Leave at least 20% headroom above your estimated total power draw.',
+    items:[
+      { name:'Thermaltake Smart 500W', tag:'80+ White', price:39, wattage:500, specs:{'Wattage':'500W','Rating':'80+'} },
+      { name:'EVGA 600 BA 600W', tag:'80+ Bronze', price:54, wattage:600, specs:{'Wattage':'600W','Rating':'80+ Bronze'} },
+      { name:'Corsair CX650M 650W', tag:'Semi-modular', price:69, wattage:650, specs:{'Wattage':'650W','Rating':'80+ Bronze'}, featured:true },
+      { name:'Seasonic Focus GX-750 750W', tag:'Fully modular', price:95, wattage:750, specs:{'Wattage':'750W','Rating':'80+ Gold'} },
+      { name:'Corsair RM850e 850W', tag:'ATX 3.0 Compatible', price:119, wattage:850, specs:{'Wattage':'850W','Rating':'80+ Gold'}, featured:true },
+      { name:'MSI MPG A1000G 1000W', tag:'ATX 3.0 / PCIe 5.0', price:169, wattage:1000, specs:{'Wattage':'1000W','Rating':'80+ Gold'} },
+      { name:'Corsair RM1200x Shift', tag:'Side Interface', price:219, wattage:1200, specs:{'Wattage':'1200W','Rating':'80+ Gold'} },
+      { name:'Seasonic Prime TX-1300', tag:'Extreme Power', price:359, wattage:1300, specs:{'Wattage':'1300W','Rating':'80+ Titanium'} }
+    ]},
+  { id:'case', name:'Case', en:'Case', icon:'case',
+    note:'Pick based on your motherboard size and the style you like.',
+    items:[
+      { name:'Cooler Master Q300L', tag:'mATX · Compact', price:45, specs:{'Supports':'mATX/ITX','Size':'Compact'} },
+      { name:'Montech AIR 903 BASE', tag:'E-ATX · High Airflow', price:65, specs:{'Supports':'E-ATX/ATX','Fans':'3 included'} },
+      { name:'Corsair 4000D Airflow', tag:'ATX · Classic', price:94, specs:{'Supports':'E-ATX/ATX','Front':'Mesh'} },
+      { name:'NZXT H6 Flow', tag:'ATX · Dual Chamber', price:109, specs:{'Supports':'ATX/mATX','Design':'Glass corner'} },
+      { name:'Lian Li LANCOOL 216', tag:'ATX · Excellent airflow', price:100, specs:{'Supports':'E-ATX/ATX','Fans':'3 large fans'}, featured:true },
+      { name:'Fractal Design North', tag:'ATX · Wood front panel', price:139, specs:{'Supports':'ATX/mATX','Material':'Wood accent'} },
+      { name:'Hyte Y60', tag:'ATX · Panoramic Glass', price:179, specs:{'Supports':'E-ATX/ATX','Design':'Fish tank'} },
+      { name:'Lian Li O11 Dynamic EVO', tag:'ATX · Showcase', price:159, specs:{'Supports':'E-ATX/ATX','Modularity':'Reversible'} },
+      { name:'Fractal Design Torrent', tag:'E-ATX · Ultimate Airflow', price:189, specs:{'Supports':'E-ATX/ATX','Fans':'2x180mm included'} }
+    ]},
+  { id:'cooler', name:'CPU Cooler', en:'CPU Cooler', icon:'cooler',
+    note:'High-end CPUs (X3D, K-series) benefit from a liquid cooler for lower temperatures.',
+    items:[
+      { name:'Stock Cooler', tag:'Included with CPU', price:0, specs:{'Type':'Air','Noise':'Moderate'} },
+      { name:'Thermalright Peerless Assassin 120', tag:'Dual Tower', price:34, specs:{'Type':'Air','Heatpipes':'6'}, featured:true },
+      { name:'DeepCool AK620', tag:'High Performance Air', price:55, specs:{'Type':'Air','TDP':'260W'} },
+      { name:'Noctua NH-D15', tag:'Premium Air Cooler', price:119, specs:{'Type':'Air','Noise':'Ultra Quiet'} },
+      { name:'Arctic Liquid Freezer III 240', tag:'Quiet 240mm AIO', price:86, specs:{'Type':'Liquid','Radiator':'240mm'} },
+      { name:'NZXT Kraken 240', tag:'LCD Screen AIO', price:135, specs:{'Type':'Liquid','Radiator':'240mm'} },
+      { name:'Arctic Liquid Freezer III 360', tag:'Performance 360mm', price:115, specs:{'Type':'Liquid','Radiator':'360mm'}, featured:true },
+      { name:'Corsair iCUE H150i ELITE', tag:'RGB 360mm AIO', price:179, specs:{'Type':'Liquid','Radiator':'360mm'} },
+      { name:'Lian Li Galahad II LCD 360', tag:'Premium 360mm AIO', price:249, specs:{'Type':'Liquid','Radiator':'360mm'} }
+    ]}
 ];
 
-const FULL_STORE_DATA = generate50PerCategory();
+const DB_KEYS = { cart:'pcbuilder_cart_v1', orders:'pcbuilder_orders_v1' };
 
-// App State
-let activeCatId = 'cpu';
-let selectedParts = {}; // catId -> item OR array of items for storage
-let filterCompatOnly = false;
-
-// Initialize App
-function init() {
-  renderCategories();
-  renderStoreItems();
-  updateSummary();
+function safeGet(key, fallback){
+  try{ const raw = localStorage.getItem(key); return raw ? JSON.parse(raw) : fallback; }
+  catch(e){ return fallback; }
 }
+function safeSet(key, value){
+  try{ localStorage.setItem(key, JSON.stringify(value)); return true; }
+  catch(e){ return false; }
+}
+function delay(ms){ return new Promise(r => setTimeout(r, ms)); }
 
-function renderCategories() {
-  const container = document.getElementById('category-list');
-  container.innerHTML = CATEGORY_DEFS.map(cat => {
-    const items = FULL_STORE_DATA[cat.id] || [];
-    const selection = selectedParts[cat.id];
-    let selText = "None selected";
-    
-    if (selection) {
-      if (Array.isArray(selection)) {
-        selText = selection.length > 0 ? `${selection.length} drive(s)` : "None selected";
-      } else {
-        selText = selection.n;
-      }
+const API = {
+  async getProducts(){
+    await delay(80);
+    return CATEGORY_DEFS;
+  },
+  async getCart(){
+    await delay(60);
+    return safeGet(DB_KEYS.cart, null);
+  },
+  async saveCart(cartState){
+    await delay(60);
+    return safeSet(DB_KEYS.cart, cartState);
+  },
+  async createOrder(order){
+    await delay(900);
+    const orders = safeGet(DB_KEYS.orders, []);
+    const orderId = 'PC-' + Date.now().toString(36).toUpperCase();
+    const record = { ...order, orderId, createdAt: new Date().toISOString(), status:'confirmed' };
+    orders.unshift(record);
+    safeSet(DB_KEYS.orders, orders);
+    return record;
+  },
+  async getOrders(){
+    await delay(60);
+    return safeGet(DB_KEYS.orders, []);
+  },
+};
+
+const state = {};
+CATEGORY_DEFS.forEach(c => state[c.id] = c.multi ? [] : null);
+let activeCat = CATEGORY_DEFS[0].id;
+let lastTotal = 0;
+let currentPage = 'build';
+
+function fmt(n){ return '$' + n.toLocaleString('en-US'); }
+function getCat(id){ return CATEGORY_DEFS.find(c => c.id === id); }
+function selectedCpu(){ const c = getCat('cpu'); return state.cpu !== null ? c.items[state.cpu] : null; }
+function selectedBoardSocket(){ const c = getCat('board'); return state.board !== null ? c.items[state.board].socket : null; }
+
+function selectedItemsFlat(){
+  const out = [];
+  CATEGORY_DEFS.forEach(c => {
+    if (c.multi){ state[c.id].forEach(i => out.push({cat:c, item:c.items[i]})); }
+    else if (state[c.id] !== null){ out.push({cat:c, item:c.items[state[c.id]]}); }
+  });
+  return out;
+}
+function totalPrice(){ return selectedItemsFlat().reduce((s,x) => s + x.item.price, 0); }
+function totalPower(){ return selectedItemsFlat().reduce((s,x) => s + (x.item.power || 0), 0); }
+function chosenPsuWattage(){ const c = getCat('psu'); return state.psu !== null ? c.items[state.psu].wattage : null; }
+function essentialDone(){ return ['cpu','board','ram','psu','case'].every(id => state[id] !== null); }
+
+function navigate(page){
+  currentPage = page;
+  document.querySelectorAll('.page').forEach(el => el.classList.toggle('active', el.id === 'page-' + page));
+  document.querySelectorAll('.topnav-link').forEach(el => el.classList.toggle('active', el.dataset.nav === page));
+  if (page === 'cart') renderCartPage();
+  if (page === 'checkout') renderCheckoutPage();
+  if (page === 'history') renderHistoryPage();
+  window.scrollTo({top:0, behavior:'instant' in window ? 'instant' : 'auto'});
+}
+document.querySelectorAll('[data-nav]').forEach(el => {
+  el.addEventListener('click', () => navigate(el.dataset.nav));
+});
+
+const stepsEl = document.getElementById('steps');
+const gridEl = document.getElementById('grid');
+const catTitleEl = document.getElementById('catTitle');
+const catCountEl = document.getElementById('catCount');
+const catNoteEl = document.getElementById('catNote');
+const compatFlagEl = document.getElementById('compatFlag');
+const summaryListEl = document.getElementById('summaryList');
+const progressLabelEl = document.getElementById('progressLabel');
+const powerEstEl = document.getElementById('powerEst');
+
+function renderSteps(){
+  stepsEl.innerHTML = '<div class="steps-title">Build Steps</div>' + CATEGORY_DEFS.map((c,i) => {
+    const done = c.multi ? state[c.id].length > 0 : state[c.id] !== null;
+    let pickLabel = 'Not selected';
+    if (done){
+      pickLabel = c.multi
+        ? (state[c.id].length === 1 ? c.items[state[c.id][0]].name : state[c.id].length + ' items selected')
+        : c.items[state[c.id]].name;
     }
-
     return `
-      <div class="cat-card ${cat.id === activeCatId ? 'active' : ''}" onclick="selectCategory('${cat.id}')">
-        <div class="cat-info">
-          <span class="cat-icon">${cat.icon}</span>
-          <div>
-            <div class="cat-name">${cat.name}</div>
-            <div class="cat-selection">${selText}</div>
-          </div>
+      <div class="step ${activeCat===c.id?'active':''} ${done?'done':''}" data-cat="${c.id}">
+        <span class="num">${String(i+1).padStart(2,'0')}</span>
+        <div class="step-body">
+          <div class="step-name">${c.name}</div>
+          <div class="step-pick">${pickLabel}</div>
         </div>
-        <div class="cat-count">${items.length}</div>
-      </div>
-    `;
+        <span class="step-check"></span>
+      </div>`;
   }).join('');
+  stepsEl.querySelectorAll('.step').forEach(el => {
+    el.addEventListener('click', () => { activeCat = el.dataset.cat; renderBuildPage(); window.scrollTo({top:0,behavior:'smooth'}); });
+  });
 }
 
-function selectCategory(catId) {
-  activeCatId = catId;
-  renderCategories();
-  renderStoreItems();
-}
+function renderGrid(){
+  const cat = getCat(activeCat);
+  catTitleEl.textContent = cat.name;
+  catNoteEl.textContent = cat.note;
+  catCountEl.textContent = cat.items.length + ' options';
 
-function toggleCompatFilter() {
-  filterCompatOnly = !filterCompatOnly;
-  const btn = document.getElementById('filter-compat-btn');
-  btn.classList.toggle('active', filterCompatOnly);
-  renderStoreItems();
-}
-
-function isItemCompatible(item, catId) {
-  const cpu = selectedParts['cpu'];
-  const board = selectedParts['board'];
-  const psu = selectedParts['psu'];
-  const gpu = selectedParts['gpu'];
-
-  // Socket Check (CPU vs Board)
-  if (catId === 'board' && cpu && item.s !== cpu.s) return false;
-  if (catId === 'cpu' && board && item.s !== board.s) return false;
-
-  // RAM Type Check (RAM vs Board)
-  if (catId === 'ram' && board && item.r !== board.r) return false;
-  if (catId === 'board' && selectedParts['ram'] && item.r !== selectedParts['ram'].r) return false;
-
-  // Power PSU Check
-  if (catId === 'psu') {
-    const estWatts = calculateTotalWattage();
-    if (item.w < estWatts) return false;
+  compatFlagEl.innerHTML = '';
+  if (cat.id === 'board' && selectedCpu()){
+    compatFlagEl.innerHTML = `<div class="compat-flag ok">Showing motherboards with ${selectedCpu().socket} socket to match ${selectedCpu().name}</div>`;
+  }
+  if (cat.id === 'cpu' && selectedBoardSocket()){
+    compatFlagEl.innerHTML = `<div class="compat-flag ok">Showing CPUs with ${selectedBoardSocket()} socket to match your selected motherboard</div>`;
   }
 
-  return true;
+  const [ha, hb] = HUES[cat.icon] || HUES.cpu;
+
+  gridEl.innerHTML = cat.items.map((item, idx) => {
+    const isSelected = cat.multi ? state[cat.id].includes(idx) : state[cat.id] === idx;
+    let incompatible = false;
+    if (cat.id === 'board' && selectedCpu()) incompatible = item.socket !== selectedCpu().socket;
+    if (cat.id === 'cpu' && selectedBoardSocket()) incompatible = item.socket !== selectedBoardSocket();
+
+    const specsHtml = Object.entries(item.specs).map(([k,v]) => `<li><span>${k}</span><span>${v}</span></li>`).join('');
+    return `
+      <div class="card ${isSelected?'selected':''} ${incompatible?'incompatible':''}" data-idx="${idx}" style="animation-delay:${idx*45}ms" ${incompatible?'title="Socket does not match your other selected parts"':''}>
+        <div class="card-image" style="--hue-a:${ha}; --hue-b:${hb};">
+          ${item.featured ? '<span class="badge">Recommended</span>' : ''}
+          <div class="shine"></div>
+          <div class="icon-wrap">${ICONS[cat.icon]}</div>
+        </div>
+        <div class="card-body">
+          <div class="card-title">${item.name}</div>
+          <div class="card-tag">${item.tag}</div>
+          <ul class="card-specs">${specsHtml}</ul>
+          <div class="card-foot">
+            <span class="price">${item.price === 0 ? 'No extra cost' : fmt(item.price)}</span>
+            <button class="pick-btn">${isSelected ? (cat.multi ? 'Remove' : 'Selected') : 'Select'}</button>
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+
+  gridEl.querySelectorAll('.card').forEach(el => {
+    el.addEventListener('click', () => {
+      const idx = parseInt(el.dataset.idx, 10);
+      if (cat.multi){
+        const arr = state[cat.id];
+        const pos = arr.indexOf(idx);
+        if (pos >= 0) arr.splice(pos,1); else arr.push(idx);
+      } else {
+        state[cat.id] = state[cat.id] === idx ? null : idx;
+      }
+      persistCart();
+      renderBuildPage();
+    });
+
+    el.addEventListener('mousemove', (e) => {
+      const r = el.getBoundingClientRect();
+      const px = (e.clientX - r.left) / r.width - 0.5;
+      const py = (e.clientY - r.top) / r.height - 0.5;
+      el.style.transform = `perspective(700px) rotateX(${(-py*6).toFixed(2)}deg) rotateY(${(px*7).toFixed(2)}deg) translateY(-4px)`;
+    });
+    el.addEventListener('mouseleave', () => { el.style.transform = ''; });
+  });
 }
 
-function renderStoreItems() {
-  const container = document.getElementById('store-items');
-  const searchQuery = document.getElementById('search-input').value.toLowerCase();
-  const rawItems = FULL_STORE_DATA[activeCatId] || [];
+function animateNumber(el, from, to){
+  const dur = 380; const start = performance.now();
+  function step(now){
+    const t = Math.min(1, (now-start)/dur);
+    const eased = 1 - Math.pow(1-t, 3);
+    const val = Math.round(from + (to-from)*eased);
+    el.textContent = fmt(val);
+    if (t < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
 
-  const filtered = rawItems.filter(item => {
-    const matchesSearch = item.n.toLowerCase().includes(searchQuery) || 
-                          (item.tags && item.tags.some(t => t.toLowerCase().includes(searchQuery)));
-    if (!matchesSearch) return false;
-    if (filterCompatOnly && !isItemCompatible(item, activeCatId)) return false;
-    return true;
-  });
+function renderSummary(){
+  const flat = selectedItemsFlat();
+  if (flat.length === 0){
+    summaryListEl.innerHTML = '<div class="sum-empty">Start picking parts on the left to build your spec. Selected items will show up here.</div>';
+  } else {
+    summaryListEl.innerHTML = flat.map(({cat,item}, i) => `
+      <div class="sum-row" style="animation-delay:${i*30}ms">
+        <div><div class="cat">${cat.name}</div><div class="item">${item.name}</div></div>
+        <div class="p">${item.price === 0 ? '—' : fmt(item.price)}</div>
+      </div>`).join('');
+  }
+  const doneCount = CATEGORY_DEFS.filter(c => c.multi ? state[c.id].length>0 : state[c.id]!==null).length;
+  progressLabelEl.textContent = doneCount === 0 ? 'No parts selected yet' : `${doneCount} of ${CATEGORY_DEFS.length} categories selected`;
 
-  if (filtered.length === 0) {
-    container.innerHTML = `<div style="text-align:center; padding: 2rem; color:var(--text-dim);">No components found.</div>`;
+  const power = totalPower();
+  const psuW = chosenPsuWattage();
+  powerEstEl.textContent = power > 0 ? `~${power} W` : '— W';
+  powerEstEl.className = 'v mono' + (psuW && power > psuW * 0.85 ? ' warn' : '');
+
+  const total = totalPrice();
+  document.getElementById('topTotal').textContent = fmt(total);
+  animateNumber(document.getElementById('sideTotal'), lastTotal, total);
+  document.getElementById('mobTotal').textContent = fmt(total);
+  if (total !== lastTotal){
+    ['topTotal','sideTotal'].forEach(id => {
+      const el = document.getElementById(id);
+      el.classList.remove('bump'); void el.offsetWidth; el.classList.add('bump');
+    });
+  }
+  lastTotal = total;
+
+  const ready = essentialDone();
+  document.getElementById('goCartBtn').disabled = !ready;
+  document.getElementById('mobCheckout').disabled = !ready;
+
+  const cartCount = flat.length;
+  const navBadge = document.getElementById('navCartCount');
+  navBadge.style.display = cartCount > 0 ? 'flex' : 'none';
+  navBadge.textContent = cartCount;
+}
+
+function renderBuildPage(){ renderSteps(); renderGrid(); renderSummary(); }
+
+document.getElementById('resetBtn').addEventListener('click', () => {
+  CATEGORY_DEFS.forEach(c => state[c.id] = c.multi ? [] : null);
+  activeCat = CATEGORY_DEFS[0].id;
+  lastTotal = 0;
+  persistCart();
+  renderBuildPage();
+});
+document.getElementById('goCartBtn').addEventListener('click', () => navigate('cart'));
+document.getElementById('mobCheckout').addEventListener('click', () => navigate('cart'));
+
+function persistCart(){ API.saveCart(state); }
+
+function renderCartPage(){
+  const flat = selectedItemsFlat();
+  const listEl = document.getElementById('cartList');
+  const totalsEl = document.getElementById('cartTotalsWrap');
+
+  if (flat.length === 0){
+    listEl.innerHTML = `<div class="cart-empty"><div class="big">Your cart is empty</div>Go to the Build page to pick some parts</div>`;
+    totalsEl.innerHTML = '';
     return;
   }
 
-  const currentSelection = selectedParts[activeCatId];
-
-  container.innerHTML = filtered.map(item => {
-    let isSelected = false;
-    if (Array.isArray(currentSelection)) {
-      isSelected = currentSelection.some(s => s.id === item.id);
-    } else if (currentSelection) {
-      isSelected = currentSelection.id === item.id;
-    }
-
-    const isCompat = isItemCompatible(item, activeCatId);
-
-    return `
-      <div class="item-card" style="${!isCompat ? 'opacity:0.65;' : ''}">
-        <div class="item-left">
-          <div class="item-img">${CATEGORY_DEFS.find(c => c.id === activeCatId).icon}</div>
-          <div class="item-details">
-            <div class="item-title">${item.n} ${!isCompat ? '<span style="color:var(--warn); font-size:11px;">(Incompatible)</span>' : ''}</div>
-            <div class="item-specs">
-              ${item.s ? `<span class="item-spec-tag">Socket ${item.s}</span>` : ''}
-              ${item.r ? `<span class="item-spec-tag">${item.r}</span>` : ''}
-              ${item.w ? `<span class="item-spec-tag">${item.w}W</span>` : ''}
-              ${item.tags ? item.tags.map(t => `<span class="item-spec-tag">${t}</span>`).join('') : ''}
-            </div>
-          </div>
-        </div>
-        <div class="item-right">
-          <div class="item-price">$${item.p}</div>
-          <button class="btn-select ${isSelected ? 'selected' : ''}" onclick="toggleSelect('${item.id}')">
-            ${isSelected ? 'Added ✓' : 'Add +'}
-          </button>
-        </div>
+  listEl.innerHTML = flat.map(({cat,item}, i) => `
+    <div class="cart-row" style="animation-delay:${i*30}ms" data-cat="${cat.id}" data-name="${item.name.replace(/"/g,'&quot;')}">
+      <div class="ic">${ICONS[cat.icon]}</div>
+      <div class="info">
+        <div class="cat">${cat.name}</div>
+        <div class="nm">${item.name}</div>
       </div>
-    `;
-  }).join('');
-}
+      <div class="p">${item.price === 0 ? '—' : fmt(item.price)}</div>
+      <button class="rm" title="Remove from cart">Remove</button>
+    </div>`).join('');
 
-function toggleSelect(itemId) {
-  const catDef = CATEGORY_DEFS.find(c => c.id === activeCatId);
-  const item = FULL_STORE_DATA[activeCatId].find(i => i.id === itemId);
-
-  if (catDef.multi) {
-    if (!selectedParts[activeCatId]) selectedParts[activeCatId] = [];
-    const idx = selectedParts[activeCatId].findIndex(i => i.id === itemId);
-    if (idx > -1) {
-      selectedParts[activeCatId].splice(idx, 1);
-    } else {
-      selectedParts[activeCatId].push(item);
-    }
-  } else {
-    if (selectedParts[activeCatId] && selectedParts[activeCatId].id === itemId) {
-      delete selectedParts[activeCatId];
-    } else {
-      selectedParts[activeCatId] = item;
-    }
-  }
-
-  renderCategories();
-  renderStoreItems();
-  updateSummary();
-}
-
-function removeItem(catId, itemId) {
-  if (Array.isArray(selectedParts[catId])) {
-    selectedParts[catId] = selectedParts[catId].filter(i => i.id !== itemId);
-  } else {
-    delete selectedParts[catId];
-  }
-  renderCategories();
-  renderStoreItems();
-  updateSummary();
-}
-
-function calculateTotalWattage() {
-  let watts = 50; // System baseline / Fans
-  if (selectedParts.cpu) watts += (selectedParts.cpu.w || 65);
-  if (selectedParts.gpu) watts += (selectedParts.gpu.w || 200);
-  if (selectedParts.cooler) watts += (selectedParts.cooler.w || 10);
-  return watts;
-}
-
-function updateSummary() {
-  // 1. Total Price
-  let price = 0;
-  Object.keys(selectedParts).forEach(catId => {
-    const val = selectedParts[catId];
-    if (Array.isArray(val)) {
-      val.forEach(i => price += i.p);
-    } else if (val) {
-      price += val.p;
-    }
+  listEl.querySelectorAll('.cart-row .rm').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const row = btn.closest('.cart-row');
+      const catId = row.dataset.cat;
+      const cat = getCat(catId);
+      if (cat.multi){
+        const item = cat.items.find(it => it.name === row.dataset.name);
+        const idx = cat.items.indexOf(item);
+        const pos = state[catId].indexOf(idx);
+        if (pos >= 0) state[catId].splice(pos,1);
+      } else {
+        state[catId] = null;
+      }
+      persistCart();
+      renderCartPage();
+      renderSummary();
+    });
   });
-  document.getElementById('total-price').innerText = `$${price.toLocaleString()}`;
 
-  // 2. Total Wattage
-  const totalWatts = calculateTotalWattage();
-  document.getElementById('total-wattage').innerText = `${totalWatts}W`;
-
-  // 3. Compatibility Checks
-  const compatList = document.getElementById('compat-list');
-  const checks = [];
-
-  const cpu = selectedParts.cpu;
-  const board = selectedParts.board;
-  const ram = selectedParts.ram;
-  const psu = selectedParts.psu;
-
-  // CPU + Board Check
-  if (cpu && board) {
-    if (cpu.s === board.s) {
-      checks.push({ ok: true, msg: `Socket matched: ${cpu.s}` });
-    } else {
-      checks.push({ ok: false, msg: `Socket mismatch: CPU (${cpu.s}) vs Board (${board.s})` });
-    }
-  } else {
-    checks.push({ ok: true, msg: "CPU & Motherboard socket auto-check ready" });
-  }
-
-  // Board + RAM Check
-  if (board && ram) {
-    if (board.r === ram.r) {
-      checks.push({ ok: true, msg: `Memory type matched: ${ram.r}` });
-    } else {
-      checks.push({ ok: false, msg: `RAM mismatch: Board requires ${board.r}, got ${ram.r}` });
-    }
-  }
-
-  // PSU Check
-  if (psu) {
-    if (psu.w >= totalWatts + 100) {
-      checks.push({ ok: true, msg: `PSU Headroom safe: ${psu.w}W vs ${totalWatts}W load` });
-    } else if (psu.w >= totalWatts) {
-      checks.push({ ok: false, msg: `PSU tight headroom: ${psu.w}W vs ${totalWatts}W load` });
-    } else {
-      checks.push({ ok: false, msg: `Insufficient PSU: Build requires at least ${totalWatts}W!` });
-    }
-  }
-
-  compatList.innerHTML = checks.map(c => `
-    <div class="compat-item ${c.ok ? 'ok' : 'warn'}">
-      <span>${c.ok ? '✓' : '⚠️'}</span>
-      <span>${c.msg}</span>
+  const total = totalPrice();
+  totalsEl.innerHTML = `
+    <div class="cart-totals">
+      <div class="row"><span>Shipping</span><span>Free</span></div>
+      <div class="row grand"><span>Order total</span><span class="v">${fmt(total)}</span></div>
     </div>
-  `).join('');
-
-  // 4. Selected Parts List
-  const buildItems = document.getElementById('build-items');
-  let buildHtml = '';
-
-  CATEGORY_DEFS.forEach(cat => {
-    const val = selectedParts[cat.id];
-    if (!val) return;
-
-    if (Array.isArray(val)) {
-      val.forEach(i => {
-        buildHtml += `
-          <div class="build-item-row">
-            <span class="build-item-name">${i.n}</span>
-            <div>
-              <span>$${i.p}</span>
-              <span class="build-item-remove" onclick="removeItem('${cat.id}', '${i.id}')">✕</span>
-            </div>
-          </div>
-        `;
-      });
-    } else {
-      buildHtml += `
-        <div class="build-item-row">
-          <span class="build-item-name">${val.n}</span>
-          <div>
-            <span>$${val.p}</span>
-            <span class="build-item-remove" onclick="removeItem('${cat.id}', '${val.id}')">✕</span>
-          </div>
-        </div>
-      `;
-    }
-  });
-
-  buildItems.innerHTML = buildHtml || `<div style="font-size:12px; color:var(--text-dim); text-align:center; padding: 1rem;">No components added yet.</div>`;
+    <div class="cart-actions">
+      <button class="btn-ghost" data-nav="build">Add more parts</button>
+      <button class="btn-primary" id="toCheckoutBtn" ${essentialDone() ? '' : 'disabled'}>Go to Checkout</button>
+    </div>
+    ${essentialDone() ? '' : '<div class="demo-note" style="margin-top:14px;">Please select at least: CPU, motherboard, memory, power supply, and case before checking out.</div>'}
+  `;
+  document.querySelectorAll('#page-cart [data-nav]').forEach(el => el.addEventListener('click', () => navigate(el.dataset.nav)));
+  const toCheckout = document.getElementById('toCheckoutBtn');
+  if (toCheckout) toCheckout.addEventListener('click', () => navigate('checkout'));
 }
 
-function exportBuild() {
-  const summary = [];
-  CATEGORY_DEFS.forEach(cat => {
-    const val = selectedParts[cat.id];
-    if (val) {
-      if (Array.isArray(val)) {
-        val.forEach(i => summary.push(`${cat.name}: ${i.n} ($${i.p})`));
-      } else {
-        summary.push(`${cat.name}: ${val.n} ($${val.p})`);
-      }
-    }
-  });
+function renderCheckoutPage(){
+  const flat = selectedItemsFlat();
+  const total = totalPrice();
+  document.getElementById('paySummary').innerHTML = `
+    ${flat.map(({cat,item}) => `<div class="row"><span>${cat.name}: ${item.name}</span><span>${item.price===0?'—':fmt(item.price)}</span></div>`).join('')}
+    <div class="row grand"><span>Amount due</span><span class="v">${fmt(total)}</span></div>
+  `;
+}
 
-  if (summary.length === 0) {
-    alert("Your build is currently empty!");
+const checkoutForm = document.getElementById('checkoutForm');
+const payBtn = document.getElementById('payBtn');
+
+function fieldError(id, msg){
+  const field = document.getElementById(id).closest('.field');
+  field.querySelector('.err').textContent = msg || '';
+}
+
+function validateCheckout(){
+  let ok = true;
+  const name = document.getElementById('f_name').value.trim();
+  const phone = document.getElementById('f_phone').value.trim();
+  const address = document.getElementById('f_address').value.trim();
+  const email = document.getElementById('f_email').value.trim();
+  const card = document.getElementById('f_card').value.replace(/\s/g,'');
+  const exp = document.getElementById('f_exp').value.trim();
+  const cvc = document.getElementById('f_cvc').value.trim();
+
+  fieldError('f_name'); fieldError('f_phone'); fieldError('f_address'); fieldError('f_email');
+  fieldError('f_card'); fieldError('f_exp'); fieldError('f_cvc');
+
+  if (!name){ fieldError('f_name','Please enter your full name'); ok = false; }
+  if (!/^[0-9\-+ ]{9,15}$/.test(phone)){ fieldError('f_phone','Invalid phone number'); ok = false; }
+  if (!address){ fieldError('f_address','Please enter a shipping address'); ok = false; }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ fieldError('f_email','Invalid email address'); ok = false; }
+  if (!/^\d{13,16}$/.test(card)){ fieldError('f_card','Invalid card number'); ok = false; }
+  if (!/^(0[1-9]|1[0-2])\/\d{2}$/.test(exp)){ fieldError('f_exp','Must be in MM/YY format'); ok = false; }
+  if (!/^\d{3,4}$/.test(cvc)){ fieldError('f_cvc','Invalid CVC'); ok = false; }
+
+  return ok ? { name, phone, address, email, cardLast4: card.slice(-4) } : null;
+}
+
+document.getElementById('f_card').addEventListener('input', (e) => {
+  e.target.value = e.target.value.replace(/[^\d]/g,'').replace(/(.{4})/g,'$1 ').trim().slice(0,19);
+});
+document.getElementById('f_exp').addEventListener('input', (e) => {
+  let v = e.target.value.replace(/[^\d]/g,'').slice(0,4);
+  if (v.length > 2) v = v.slice(0,2) + '/' + v.slice(2);
+  e.target.value = v;
+});
+
+checkoutForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const customer = validateCheckout();
+  if (!customer) return;
+
+  payBtn.disabled = true;
+  const originalLabel = payBtn.textContent;
+  payBtn.innerHTML = '<span class="spinner"></span>Processing payment...';
+
+  const flat = selectedItemsFlat();
+  const order = {
+    customer,
+    items: flat.map(({cat,item}) => ({ category: cat.name, name: item.name, price: item.price })),
+    total: totalPrice(),
+  };
+
+  try{
+    const record = await API.createOrder(order);
+    document.getElementById('confirmOrderId').textContent = 'Order number: ' + record.orderId;
+    document.getElementById('confirmSummary').innerHTML = `
+      <h3><span class="n">✓</span>Order Summary</h3>
+      ${record.items.map(it => `<div class="pay-summary row" style="border:none; padding:4px 0;"><span>${it.category}: ${it.name}</span><span>${it.price===0?'—':fmt(it.price)}</span></div>`).join('')}
+      <div class="row grand" style="display:flex; justify-content:space-between; margin-top:10px; padding-top:10px; border-top:1px solid var(--line-soft);"><span>Amount charged</span><span class="v mono" style="color:var(--copper-bright);">${fmt(record.total)}</span></div>
+    `;
+    CATEGORY_DEFS.forEach(c => state[c.id] = c.multi ? [] : null);
+    lastTotal = 0;
+    persistCart();
+    checkoutForm.reset();
+    navigate('confirm');
+  } catch(err){
+    fieldError('f_card','Payment failed, please try again');
+  } finally {
+    payBtn.disabled = false;
+    payBtn.textContent = originalLabel;
+  }
+});
+
+async function renderHistoryPage(){
+  const listEl = document.getElementById('historyList');
+  listEl.innerHTML = `<div class="cart-empty">Loading...</div>`;
+  const orders = await API.getOrders();
+  if (orders.length === 0){
+    listEl.innerHTML = `<div class="cart-empty"><div class="big">No orders yet</div>Confirmed orders will show up here</div>`;
     return;
   }
-
-  const text = `=== BUILDRIG PC CONFIGURATION ===\n\n` + summary.join('\n') + `\n\nEstimated Wattage: ${calculateTotalWattage()}W\nTotal Price: ${document.getElementById('total-price').innerText}`;
-  navigator.clipboard.writeText(text);
-  alert("Build configuration copied to clipboard!");
+  listEl.innerHTML = orders.map(o => `
+    <div class="history-row">
+      <div>
+        <div class="oid">${o.orderId}</div>
+        <div class="meta">${new Date(o.createdAt).toLocaleString('en-US')} · ${o.items.length} items</div>
+      </div>
+      <div class="amt">${fmt(o.total)}</div>
+    </div>`).join('');
 }
 
-// Start application
-window.onload = init;
+(async function init(){
+  const saved = await API.getCart();
+  if (saved){
+    CATEGORY_DEFS.forEach(c => {
+      if (saved[c.id] !== undefined) state[c.id] = saved[c.id];
+    });
+  }
+  renderBuildPage();
+  navigate('build');
+})();
 </script>
 </body>
 </html>
